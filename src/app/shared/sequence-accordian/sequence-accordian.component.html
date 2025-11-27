@@ -1,0 +1,109 @@
+<cdk-accordion class="block w-full">
+  <div class="flex justify-end">
+    <button
+      *ngIf="module === 'testBRPlan'"
+      (click)="startExecutePlan()"
+      [disabled]="startTest"
+      class="mat-raised-button mb-2 text-toolbarBg bg-text px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+      mat-raised-button
+    >
+      START TEST
+    </button>
+    <button
+      *ngIf="module === 'executeBRPlan'"
+      (click)="startExecutePlan()"
+      [disabled]="startExecute"
+      class="h-12 mt-4 mb-2 mat-raised-button text-toolbarBg bg-text px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+      mat-raised-button
+    >
+      START EXECUTION
+    </button>
+  </div>
+  <ng-container *ngFor="let item of sequences; let index = index">
+    <!-- Accordion item for each sequence -->
+    <cdk-accordion-item
+      #accordionItem="cdkAccordionItem"
+      [class]="
+        'block border border-gray-300 ' +
+        (index === 0 ? 'rounded-t-lg ' : '') +
+        (index === sequences.length - 1 ? 'rounded-b-lg' : '')
+      "
+      role="button"
+      tabindex="0"
+      [attr.id]="'accordion-header-' + index"
+      [attr.aria-expanded]="accordionItem.expanded"
+      [attr.aria-controls]="'accordion-body-' + index"
+      [expanded]="index === expandedIndex"
+    >
+      <!-- Accordion Header Section -->
+      <div
+        class="flex items-center justify-between p-4 bg-lblue hover:bg-gray-200"
+        (click)="onAccordionClick(item.id, index); accordionItem.toggle()"
+      >
+        <!-- Sequence number and button for editing -->
+        <div class="flex-grow flex items-center">
+          <button
+            (click)="
+              $event.stopPropagation(); editNewSequence(item.id, item.status)
+            "
+            [disabled]="
+              !hasPermissionToEditSequence ||
+              item.status !== 'SequenceBuildStarted'
+            "
+            class="text-left mr-4"
+          >
+            {{ item.sequenceNumber }}
+          </button>
+
+          <span class="flex-grow"></span>
+
+          <div class="flex items-center">
+            <!-- Display status using custom status highlighter component -->
+
+            <app-status-highlighter
+              [status]="item.status"
+            ></app-status-highlighter>
+            <!-- Expand/Collapse icon -->
+            <mat-icon
+              [class]="
+                'transform transition-transform duration-200' +
+                (accordionItem.expanded ? ' rotate-180' : '')
+              "
+            >
+              expand_more
+            </mat-icon>
+          </div>
+        </div>
+      </div>
+      <!-- Accordion Body Section -->
+      <div
+        class="p-4 bg-white"
+        role="region"
+        [style.display]="accordionItem.expanded ? '' : 'none'"
+        [attr.id]="'accordion-body-' + index"
+        [attr.aria-labelledby]="'accordion-header-' + index"
+      >
+        <!-- Conditionally display task table for other modules -->
+        <div *ngIf="module !== 'buildBRPlan'">
+          <app-task-table [planId]="planId" [sequenceId]="sequenceId">
+          </app-task-table>
+        </div>
+        <!-- Display task creation accordion and task table for 'buildBRPlan' module -->
+        <div *ngIf="module === 'buildBRPlan'">
+          <app-task-creation-accordion
+            [planId]="planId"
+            [sequenceId]="sequenceId"
+          >
+          </app-task-creation-accordion>
+          <app-task-table
+            [planId]="planId"
+            [sequenceId]="sequenceId"
+            [moduleName]="module"
+            [refreshTrigger]="reloadTimestamp"
+          >
+          </app-task-table>
+        </div>
+      </div>
+    </cdk-accordion-item>
+  </ng-container>
+</cdk-accordion>

@@ -1,0 +1,114 @@
+<div class="admin-submenu-dialog bg-gray-800 mobileLandscape:hidden">
+  <div class="dialog-content">
+    <!-- User Management menu item with permission check, click event, and tooltip -->
+    <div
+      *ngIf="hasPermissionToUserManagement"
+      class="submenu-item"
+      (click)="navigateAndClose('/home/userManagement')"
+      matTooltip="User Management"
+      matTooltipPosition="right"
+    >
+      <mat-icon>group</mat-icon>
+      <span class="nav-text">User Management</span>
+    </div>
+    <!-- Default Settings menu item with permission check, click event, and tooltip -->
+    <div
+      *ngIf="hasPermissionToDefaultSettings"
+      class="submenu-item"
+      (click)="navigateAndClose('/home/defaultConfigurations')"
+      matTooltip="Default Settings"
+      matTooltipPosition="right"
+    >
+      <mat-icon>settings</mat-icon>
+      <span>Default Settings</span>
+    </div>
+    <!-- Department Management menu item with permission check, click event, and tooltip -->
+    <div
+      *ngIf="hasPermissionToDepartmentManagement"
+      class="submenu-item"
+      (click)="navigateAndClose('/home/departmentManagement')"
+      matTooltip="Department Management"
+      matTooltipPosition="right"
+    >
+      <mat-icon>business</mat-icon>
+      <span>Department Management</span>
+    </div>
+    <!-- DR Skills Management menu item with permission check, click event, and tooltip -->
+    <div
+      *ngIf="hasPermissionToDRSkillManagement"
+      class="submenu-item"
+      (click)="navigateAndClose('/home/skillManagement')"
+      matTooltip="DR Skills Management"
+      matTooltipPosition="right"
+    >
+      <mat-icon>equalizer</mat-icon>
+      <span>DR Skills Management</span>
+    </div>
+    <!-- DR Team Management menu item with permission check, click event, and tooltip -->
+    <div
+      *ngIf="hasPermissionToDRTeamManagement"
+      class="submenu-item"
+      (click)="navigateAndClose('/home/drTeamManagement')"
+      matTooltip="DR Team Management"
+      matTooltipPosition="right"
+    >
+      <mat-icon>filter_vintage</mat-icon>
+      <span>DR Team Management</span>
+    </div>
+    <!-- Plan Level Management menu item with permission check, click event, and tooltip -->
+    <div
+      *ngIf="hasPermissionToPlanLevelManagement"
+      class="submenu-item"
+      (click)="navigateAndClose('/home/planLevelManagement')"
+      matTooltip="Plan Level Management"
+      matTooltipPosition="right"
+    >
+      <mat-icon>category</mat-icon>
+      <span>Plan Level Management</span>
+    </div>
+    <!-- Plan Type Management menu item with permission check, click event, and tooltip -->
+    <div
+      *ngIf="hasPermissionToPlanTypeManagement"
+      class="submenu-item"
+      (click)="navigateAndClose('/home/planTypeManagement')"
+      matTooltip="Plan Type Management"
+      matTooltipPosition="right"
+    >
+      <mat-icon>view_list</mat-icon>
+      <span>Plan Type Management</span>
+    </div>
+    <!-- Role Management menu item with permission check, click event, and tooltip -->
+    <div
+      *ngIf="hasPermissionToRoleManagement"
+      class="submenu-item"
+      (click)="navigateAndClose('/home/roleManagement')"
+      matTooltip="Role Management"
+      matTooltipPosition="right"
+    >
+      <mat-icon>recent_actors</mat-icon>
+      <span>Role Management</span>
+    </div>
+    <!-- Site Management menu item with permission check, click event, and tooltip -->
+    <div
+      *ngIf="hasPermissionToSiteManagement"
+      class="submenu-item"
+      (click)="navigateAndClose('/home/siteManagement')"
+      matTooltip="Site Management"
+      matTooltipPosition="right"
+    >
+      <mat-icon>location_on</mat-icon>
+      <span>Site Management</span>
+    </div>
+    <!-- System Management menu item with permission check, click event, and tooltip -->
+    <div
+      *ngIf="hasPermissionToSystemManagement"
+      class="submenu-item"
+      (click)="navigateAndClose('/home/systemManagement')"
+      matTooltip="System Management"
+      matTooltipPosition="right"
+    >
+      <mat-icon>settings_applications</mat-icon>
+      <span>System Management</span>
+    </div>
+  </div>
+</div>

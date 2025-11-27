@@ -1,0 +1,95 @@
+<div class="md:p-4 pb-16 h-screen flex flex-col tablet:bg-lblue tablet:px-4">
+  <!-- Navigation Bar for the page, with dynamic title, button visibility, and action on button click -->
+  <app-navigationbar
+    pageTitle="System Management"
+    [arrow]="false"
+    [button]="hasPermissionToCreate"
+    buttonLabel="CREATE NEW SYSTEM"
+    (activeValue)="createSystem()"
+  ></app-navigationbar>
+  <!-- Tablet and Desktop view for the system list with a search input field and a grid to display systems -->
+  <div
+    class="w-full bg-white shadow-lg p-4 pb-28 flex-grow md:flex hidden tablet:flex md:pb-16"
+  >
+    <div class="p-4 w-full">
+      <h4 class="text-xl mb-4">System List</h4>
+      <div class="rounded-lg border p-4">
+        <div
+          class="flex flex-wrap items-center justify-between space-y-4 md:space-y-0"
+        >
+          <!-- Search input field (only visible on desktop view) -->
+          <div class="hidden md:block w-full tablet:w-1/3 md:w-1/3">
+            <app-input-field
+              label="Search"
+              (activeValue)="externalFilterChanged($event)"
+              placeHolder="Search By Name, Code"
+            ></app-input-field>
+          </div>
+        </div>
+
+        <div class="mt-6">
+          <!-- AG-Grid table to display system data with dynamic row data and column definitions -->
+          <ag-grid-angular
+            [rowData]="rowData"
+            [columnDefs]="displayedColumns"
+            class="ag-theme-quartz"
+            [domLayout]="'autoHeight'"
+            [pagination]="pagination"
+            [rowHeight]="50"
+            [paginationPageSize]="paginationPageSize"
+            [paginationPageSizeSelector]="paginationPageSizeSelector"
+            overlayNoRowsTemplate="<div style='position: absolute; top: 60px; left: 50%; transform: translateX(-50%); font-size: 16px; font-weight: bold; color: #555;'>
+                No systems found matching your criteria.
+              </div>"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Mobile and Tablet view for the system list, includes search input and system details display -->
+  <div class="block md:hidden tablet:hidden pb-28">
+    <div class="w-full px-4">
+      <app-input-field
+        label="Search"
+        placeHolder="Search..."
+        class="w-full"
+        (activeValue)="externalFilterChanged($event)"
+      ></app-input-field>
+    </div>
+    <div
+      class="mt-4 bg-mCard min-h-[650px] p-4 rounded-t-3xl border pt-12 pb-32"
+    >
+      <h4 class="text-xl font-semibold mb-4">Systems List</h4>
+      @if(rowData.length !== 0){ @for(data of rowData; track rowData){
+      <div class="w-full bg-gray-100 p-4 rounded-lg mb-4 shadow-md">
+        <div class="flex justify-between">
+          <h5
+            class="text-lg font-medium text-text"
+            (click)="openSystemDetails(data)"
+          >
+            {{ data.systemName }}
+          </h5>
+          <mat-icon [matMenuTriggerFor]="aboveMenu">more_vert</mat-icon>
+          <mat-menu #aboveMenu="matMenu" yPosition="above">
+            <button mat-menu-item (click)="createSystem(data)">
+              <mat-icon class="stroke-current stroke-1 mr-2">edit</mat-icon>
+              Edit
+            </button>
+            <button mat-menu-item (click)="confirmDelete(data.id)">
+              <mat-icon class="stroke-current stroke-1 mr-2"
+                >delete_forever</mat-icon
+              >
+              Delete
+            </button>
+          </mat-menu>
+        </div>
+        <p class="text-sm">{{ data.systemCode }}</p>
+      </div>
+      } }@else{
+      <div class="text-center text-gray-500 mt-6">
+        No system found matching your criteria.
+      </div>
+      }
+    </div>
+  </div>
+</div>

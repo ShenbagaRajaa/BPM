@@ -1,0 +1,95 @@
+<div [class]="classValue">
+  <div class="flex justify-between">
+    <app-navigationbar
+      [pageTitle]="pageTitle"
+      [arrow]="backButton"
+    ></app-navigationbar>
+    <button mat-icon-button class="pt-8" mat-dialog-close *ngIf="!backButton">
+      <!-- Close button (visible only if 'backButton' is false) -->
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div [class]="insideDivStyle">
+    <form
+      [formGroup]="createSystem"
+      (ngSubmit)="add($event)"
+      class="w-full mt-4 grid grid-cols-1 md:grid-cols-3 tablet:grid-cols-2 gap-4 mobileLandscape:grid-cols-3"
+    >
+      <!-- System Name Field -->
+      <div class="flex flex-col w-full tablet:col-span-2">
+        <app-input-field
+          label="System Name"
+          placeHolder="Text"
+          class="w-full"
+          [formGroup]="createSystem"
+          [minValue]="6"
+          [maxValue]="50"
+          controlName="systemName"
+          patternErrorMessage="System Name must be alphanumeric and can include underscores and spaces"
+        ></app-input-field>
+      </div>
+      <!-- System Code Field -->
+      <div class="flex flex-col w-full">
+        <app-input-field
+          label="System Code"
+          placeHolder="Text"
+          class="w-full"
+          [minValue]="8"
+          [maxValue]="20"
+          patternErrorMessage="System Code must be alphanumeric and can include underscores and spaces"
+          [formGroup]="createSystem"
+          [minValue]="8"
+          controlName="systemCode"
+        ></app-input-field>
+      </div>
+      <!-- Status Dropdown Field -->
+      <div class="flex flex-col w-full">
+        <app-dropdown
+          label="Status"
+          [options]="status"
+          [formGroup]="createSystem"
+          controlName="status"
+        ></app-dropdown>
+      </div>
+      <!-- Description Field -->
+      <div
+        class="flex flex-col w-full md:col-span-3 tablet:col-span-2 mobileLandscape:col-span-2"
+      >
+        <app-input-field
+          label="Description"
+          placeHolder="Enter a description (optional)"
+          class="w-full"
+          [formGroup]="createSystem"
+          controlName="description"
+          [maxValue]="500"
+        ></app-input-field>
+      </div>
+
+      <div
+        class="flex flex-row md:col-span-3 tablet:col-span-2 mobileLandscape:col-span-3"
+      >
+        <div class="flex-1"></div>
+        <div class="items-center justify-end">
+          <!-- CANCEL Button -->
+          <button
+            class="mat-raised-button-cancel mr-4 text-toolbarBg bg-text px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+            mat-raised-button
+            (click)="back()"
+          >
+            CANCEL
+          </button>
+          <!-- SAVE Button -->
+          <button
+            class="mat-raised-button text-toolbarBg bg-text px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+            mat-raised-button
+            (click)="add(createSystem)"
+            [disabled]="saveButtonDisabled"
+          >
+            SAVE
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,80 @@
+<div class="md:p-4 pb-16 h-screen flex flex-col tablet:bg-lblue tablet:px-4">
+  <app-navigationbar
+    pageTitle="Default Settings"
+    [arrow]="false"
+    [button]="hasPermissionToCreate"
+    buttonLabel="CREATE NEW DEFAULT SETTINGS"
+    (activeValue)="createConfiguration()"
+  ></app-navigationbar>
+
+  <div
+    class="w-full bg-white shadow-lg p-4 pb-16 flex-grow md:flex tablet:flex hidden md:pb-16"
+  >
+    <div class="p-4 w-full">
+      <h4 class="text-xl mb-4">Default Settings List</h4>
+      <div class="rounded-lg border p-4">
+        <div class="mt-6">
+          <ag-grid-angular
+            [rowData]="defaultConfigurations"
+            [columnDefs]="displayedColumns"
+            class="ag-theme-quartz"
+            [domLayout]="'autoHeight'"
+            [rowHeight]="50"
+            [pagination]="pagination"
+            [paginationPageSize]="paginationPageSize"
+            [paginationPageSizeSelector]="paginationPageSizeSelector"
+          ></ag-grid-angular>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile view section, this is hidden on desktop/tablet -->
+  <div class="block md:hidden tablet:hidden">
+    <!-- If there are default configurations, display them, otherwise show a fallback message -->
+    <div
+      class="mt-4 bg-mCard min-h-[650px] p-4 rounded-t-3xl border pt-12 pb-64"
+    >
+      <h4 class="text-xl font-semibold mb-4">Default Settings</h4>
+      <ng-container *ngIf="defaultConfigurations.length !== 0; else noSettings">
+        <!-- Loop through each configuration and display it in a card-like UI -->
+        <div
+          class="w-full bg-gray-100 p-4 rounded-lg mb-4 shadow-md"
+          *ngFor="let config of defaultConfigurations; trackBy: trackByFn"
+        >
+          <div class="flex justify-between">
+            <h5
+              class="text-lg font-medium text-text"
+              (click)="openConfigurationDetails(config)"
+            >
+              {{ config.name }}
+            </h5>
+            <mat-icon [matMenuTriggerFor]="aboveMenu">more_vert</mat-icon>
+            <mat-menu #aboveMenu="matMenu" yPosition="above">
+              <button mat-menu-item (click)="createConfiguration(config)">
+                <!-- Menu icon for actions like Edit -->
+                <mat-icon class="stroke-current stroke-1 mr-2">edit</mat-icon>
+                Edit
+              </button>
+              <button mat-menu-item (click)="confirmDelete(config.id)">
+                <mat-icon class="stroke-current stroke-1 mr-2"
+                  >delete_forever</mat-icon
+                >
+                Delete
+              </button>
+            </mat-menu>
+          </div>
+          <!-- Display the description of the configuration -->
+          <p class="text-sm text-justify">{{ config.description }}</p>
+          <p class="text-xs text-gray-500">{{ config.value }}</p>
+        </div>
+      </ng-container>
+      <!-- Fallback message if no configurations are found -->
+      <ng-template #noSettings>
+        <p class="text-center text-gray-500">
+          No Default Settings found matching your criteria.
+        </p>
+      </ng-template>
+    </div>
+  </div>
+</div>

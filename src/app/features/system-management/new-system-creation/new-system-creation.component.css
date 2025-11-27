@@ -1,0 +1,15 @@
+.custom-dialog-container .mat-dialog-content {
+  max-height: 100%;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+.custom-dialog-container .mat-dialog-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.custom-dialog-container {
+  max-height: 80vh;
+}

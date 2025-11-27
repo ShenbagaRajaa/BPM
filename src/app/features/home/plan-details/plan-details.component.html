@@ -1,0 +1,28 @@
+<div
+  class="md:p-4 tablet:px-4 pb-16 h-screen flex flex-col bg-mBgBlue tablet:bg-lblue md:bg-lblue"
+>
+  <!-- Navigation bar with title and button. The button is conditionally rendered based on editButton status. -->
+  <app-navigationbar
+    pageTitle="Plan Details"
+    buttonLabel="EDIT PLAN"
+    [button]="editButton"
+    (activeValue)="naviagateEdit()"
+  ></app-navigationbar>
+  <!-- Plan details section, conditionally displayed based on the presence of planId -->
+  <div
+    class="w-full bg-mBgBlue tablet:bg-white md:bg-white shadow-lg p-2 md:p-4 pb-64 md:pb-20 flex-grow"
+    *ngIf="planId; else content"
+  >
+    <!-- Sequence count card component, passing planId to it as input -->
+    <app-sequence-count-card [planId]="planId"></app-sequence-count-card>
+    <mat-divider class="mt-5 border-text flex md:hidden"></mat-divider>
+    <h4 class="text-xl mb-4 text-text mt-4">Sequence List</h4>
+    <!-- Accordion component displaying sequences, passing planId and module as input -->
+    <app-sequence-accordian [planId]="planId" module="home">
+    </app-sequence-accordian>
+  </div>
+  <!-- Fallback content to display if planId is not available (i.e., no data found) -->
+  <ng-template #content class="flex">
+    <div class="font-bold text-text text-lg text-center">No Data Found!...</div>
+  </ng-template>
+</div>

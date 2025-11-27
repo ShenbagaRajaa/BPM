@@ -1,0 +1,21 @@
+/* Ensures the AG Grid adapts its height dynamically */
+
+.ag-theme-quartz {
+  height: auto !important;
+}
+
+.flex-grow {
+  flex-grow: 1;
+}
+
+body {
+  overflow-y: auto;
+}
+
+.container {
+  overflow: visible !important;
+}
+
+.ag-row {
+  min-height: 40px;
+}

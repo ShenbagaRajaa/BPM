@@ -1,0 +1,44 @@
+.example-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.grid-wrapper {
+  flex: 1 1 0px;
+  width: 100%;
+}
+
+#myGrid {
+  height: 100%;
+}
+
+:host {
+  display: block;
+}
+
+.mat-icon-button {
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
+}
+
+.ag-theme-quartz {
+  height: auto !important;
+}
+
+.flex-grow {
+  flex-grow: 1;
+}
+
+body {
+  overflow-y: auto;
+}
+
+.container {
+  overflow: visible !important;
+}
+
+.ag-row {
+  min-height: 40px;
+}

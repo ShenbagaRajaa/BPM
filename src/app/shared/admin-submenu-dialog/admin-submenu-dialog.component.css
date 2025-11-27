@@ -1,0 +1,93 @@
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  .mat-tooltip {
+    z-index: 1000 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  .mat-tooltip {
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+
+  .admin-submenu-dialog {
+    width: 60px !important;
+    min-width: 60px !important;
+    padding: 4px;
+    max-height: calc(100vh - 50px);
+    position: fixed;
+    top: 7rem;
+    left: 5.5rem;
+    background-color: #1f2937;
+    border-radius: 4px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+      width: 3px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: 3px;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.8);
+      }
+    }
+
+    .dialog-content {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      max-height: inherit;
+      overflow-y: auto;
+    }
+
+    .submenu-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 8px 4px;
+      min-height: 64px;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+      color: white;
+
+      mat-icon {
+        margin: 0 0 4px 0;
+        font-size: 24px;
+        height: 24px;
+        width: 24px;
+        color: white;
+        overflow: visible;
+      }
+
+      span {
+        font-size: 11px;
+        line-height: 1.1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 100%;
+        padding: 0 2px;
+        color: white;
+      }
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: white;
+      }
+    }
+  }
+}

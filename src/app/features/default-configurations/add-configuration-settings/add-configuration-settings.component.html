@@ -1,0 +1,72 @@
+<div
+  class="md:p-4 tablet:px-4 pb-16 h-screen flex flex-col bg-mBgBlue md:bg-lblue tablet:bg-lblue"
+>
+  <app-navigationbar [pageTitle]="pageTitle"></app-navigationbar>
+
+  <div class="w-full bg-white shadow-lg p-4 pb-64 md:block h-200 flex-grow">
+    <form
+      [formGroup]="createConfiguration"
+      (ngSubmit)="add()"
+      class="w-full mt-4 grid grid-cols-1 tablet:grid-cols-2 md:grid-cols-2 gap-4"
+    >
+      <!-- Setting Name Input Field -->
+      <div class="flex flex-col w-full">
+        <app-input-field
+          label="Setting Name"
+          placeHolder="Enter unique setting name"
+          class="w-full"
+          [formGroup]="createConfiguration"
+          controlName="settingName"
+          [maxValue]="50"
+        ></app-input-field>
+        <!-- Validation Error Message for non-unique setting name -->
+        <div
+          *ngIf="createConfiguration.get('settingName')?.hasError('nonUnique')"
+          class="text-red-500"
+        >
+          Setting name must be unique.
+        </div>
+      </div>
+      <!-- Setting Value Input Field -->
+      <div class="flex flex-col w-full">
+        <app-input-field
+          label="Setting Value"
+          placeHolder="Enter numeric value"
+          class="w-full"
+          [formGroup]="createConfiguration"
+          controlName="settingValue"
+        ></app-input-field>
+      </div>
+      <!-- Description Input Field (Optional) -->
+      <div class="flex flex-col w-full tablet:col-span-2 md:col-span-2">
+        <app-input-field
+          label="Description"
+          placeHolder="Optional"
+          class="w-full"
+          [formGroup]="createConfiguration"
+          controlName="description"
+          [maxValue]="200"
+
+        ></app-input-field>
+      </div>
+      <!-- Action Buttons: Cancel and Save/Update -->
+      <div class="flex flex-row tablet:col-span-2 md:col-span-2 justify-end">
+        <button
+          class="mat-raised-button-cancel mr-4 text-toolbarBg bg-text px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+          mat-raised-button
+          (click)="back()"
+        >
+          CANCEL
+        </button>
+        <button
+          class="mat-raised-button text-toolbarBg bg-text px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+          mat-raised-button
+          type="submit"
+          [disabled]="saveButtonDisabled"
+        >
+          SAVE
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

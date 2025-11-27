@@ -1,0 +1,7 @@
+<mat-chip class="custom-chip" (click)="buttonClicked()"  [ngStyle]="{ 
+    'border-color': getBorderColor(status), 
+  }" > <div style="font-size: 0.9rem; 
+  font-weight: 600; padding: 3px 0px;
+  border-radius: 16px; text-align: center;"  [ngStyle]="{ 
+    'color': getTextColor(status) 
+  }">{{ status }}</div></mat-chip>

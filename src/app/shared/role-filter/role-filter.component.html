@@ -1,0 +1,14 @@
+<mat-form-field style="width: 150px">
+  <!-- The mat-select is used for creating a dropdown list -->
+  <mat-select
+    style="padding: 0px"
+    [(ngModel)]="filterText"
+    (selectionChange)="onInputChanged()"
+    (ngModelChange)="onInputChanged()"
+  >
+    <!-- mat-option is used to create individual dropdown items -->
+    <mat-option *ngFor="let option of options" [value]="option.id">{{
+      option.value
+    }}</mat-option>
+  </mat-select>
+</mat-form-field>

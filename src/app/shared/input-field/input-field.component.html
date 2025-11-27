@@ -1,0 +1,100 @@
+<mat-form-field appearance="outline" floatLabel="always" class="w-full">
+  <mat-label>{{ label }}</mat-label>
+  <!-- Conditionally display the country code prefix for mobile number or emergency contact phone -->
+
+  <span
+    matTextPrefix
+    *ngIf="
+      controlName === 'mobileNumber' || controlName === 'emergencyContactPhone'
+    "
+    >+{{ countryCode }} &nbsp;</span
+  >
+  <ng-container *ngIf="!formGroup" class="w-full flex items-center">
+    <div class="relative flex items-center w-full">
+      <input
+        matInput
+        class="w-full focus:outline-none focus:ring-0"
+        [placeholder]="placeHolder"
+        (input)="passvalue(inputValue)"
+        [(ngModel)]="inputValue"
+      />
+      @if(inputValue){
+      <button
+        matTooltip="Add new skill"
+        mat-icon-button
+        matSuffix
+        (click)="deleteValue()"
+        aria-label="Add new skill"
+        class="text-text absolute right-0 top-1 -translate-y-1 cursor-pointer"
+      >
+        <span class="material-icons"> cancel </span>
+      </button>
+      }
+    </div>
+  </ng-container>
+  <!-- Input field section when there is a formGroup (reactive form) -->
+  <ng-container *ngIf="formGroup" [formGroup]="formGroup">
+    <input
+      class="focus:outline-none focus:ring-0"
+      matInput
+      [placeholder]="placeHolder"
+      [formControlName]="controlName"
+      [email]="email"
+      [pattern]="pattern"
+      [readonly]="readOnly"
+      (input)="onInputChange($event)"
+    />
+  </ng-container>
+  <!-- Conditional error messages shown when the form control is invalid -->
+  <mat-error *ngIf="formGroup?.touched && formGroup?.invalid">
+    <span *ngIf="formGroup?.get(controlName)?.errors?.['required']"
+      >{{ label }} is required.
+      {{
+        controlName === "emergencyContactPhone" ||
+        controlName === "mobileNumber"
+          ? "(xxx-xxx-xxxx)"
+          : ""
+      }}</span
+    >
+    <!-- Error for minimum length violation -->
+    <span *ngIf="formGroup?.get(controlName)?.errors?.['minlength']"
+      >{{ label }} must have atleast {{ minValue }} characters</span
+    >
+    <!-- Error for maximum length violation -->
+    <span *ngIf="formGroup?.get(controlName)?.errors?.['maxlength']"
+      >{{ label }} must have less than {{ maxValue }} characters</span
+    >
+    <!-- Error for pattern mismatch -->
+    <span *ngIf="formGroup?.get(controlName)?.errors?.['pattern']"
+      ><span *ngIf="patternErrorMessage !== ''"
+        >{{ patternErrorMessage }}
+        {{
+          controlName === "emergencyContactPhone" ||
+          controlName === "mobileNumber"
+            ? "(xxx-xxx-xxxx)"
+            : ""
+        }}</span
+      ><span *ngIf="patternErrorMessage === ''"
+        >Please enter a valid {{ label }}.
+        {{
+          controlName === "emergencyContactPhone" ||
+          controlName === "mobileNumber"
+            ? "(xxx-xxx-xxxx)"
+            : ""
+        }}
+      </span>
+    </span>
+    <!-- Error for invalid email input -->
+    <span *ngIf="formGroup?.get(controlName)?.errors?.['email']"
+      >Please enter a valid {{ label }}.</span
+    >
+    <!-- Custom error for when phone numbers are not unique -->
+    <span *ngIf="formGroup?.get(controlName)?.hasError('phoneNumberNotUnique')"
+      >Emergency Contact Phone and Mobile Number must be different.
+    </span>
+    <!-- Custom error for when email addresses are not unique -->
+    <span *ngIf="formGroup?.get(controlName)?.hasError('emailNotUnique')">
+      Emergency Contact Email cannot be the same as the user Email.
+    </span>
+  </mat-error>
+</mat-form-field>

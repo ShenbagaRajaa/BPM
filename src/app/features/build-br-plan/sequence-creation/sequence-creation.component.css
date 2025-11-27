@@ -1,0 +1,19 @@
+/* Styles for larger screens (1024px and above) */
+
+@media (min-width: 1024px) {
+  .form-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  .button {
+    padding: 0.75rem 2rem;
+    font-size: 1.125rem;
+  }
+
+  .input-field {
+    padding: 1rem;
+    font-size: 1rem;
+  }
+}

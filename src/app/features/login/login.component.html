@@ -1,0 +1,106 @@
+<div
+  class="login-container min-h-screen h-fit flex flex-col md:items-center md:justify-center bg-mBg w-full bottom-0"
+>
+  <div
+    class="p-6 md:pt-2 w-full sm:w-[80%] md:w-[70%] lg:w-[60%] xl:w-1/3 max-w-lg mx-auto"
+  >
+    <!-- Header section with logo and title -->
+    <div class="mb-6 text-center mt-12 md:mt-0 pt-16 md:pt-4">
+      <img class="mx-auto mb-4" src="assets/logo.png" alt="logo" />
+      <h3 class="text-2xl font-bold text-gray-700">Login</h3>
+      <h4 class="text-gray-500 mb-8">Good to see you back</h4>
+    </div>
+    <!-- Login form with space between fields -->
+    <form class="space-y-4">
+      <div class="border">
+        <!-- Email input field with error messages -->
+        <mat-form-field appearance="outline" class="w-full custom-username">
+          <mat-label>Email</mat-label>
+          <input
+            matInput
+            [(ngModel)]="userName"
+            name="username"
+            #email="ngModel"
+            required
+            email
+            class="rounded-full"
+          />
+          <mat-icon matPrefix>person_outline</mat-icon>
+          <mat-error *ngIf="email.invalid && email.touched">
+            <span *ngIf="email.errors?.['required']">Email is required.</span>
+            <span *ngIf="email.errors?.['email']"
+              >Please enter a valid email address.</span
+            >
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <!-- Password input field with error messages and visibility toggle -->
+      <mat-form-field
+        appearance="outline"
+        class="w-full rounded-full custom-username"
+      >
+        <mat-label>Password</mat-label>
+        <mat-icon matPrefix>work_outline</mat-icon>
+        <input
+          matInput
+          [(ngModel)]="passWord"
+          #password="ngModel"
+          name="password"
+          [type]="isPasswordHidden() ? 'password' : 'text'"
+          required
+          class="rounded-full"
+          (keydown.enter)="login()"
+        />
+        <button
+          tabindex="-1"
+          mat-icon-button
+          matSuffix
+          class="pr-4"
+          [attr.aria-label]="'Hide password'"
+          [attr.aria-pressed]="!isPasswordHidden()"
+        >
+          <mat-icon (click)="clickEvent($event)">{{
+            isPasswordHidden() ? "visibility_off" : "visibility"
+          }}</mat-icon>
+        </button>
+        <mat-error *ngIf="password.invalid && password.touched">
+          <span *ngIf="password.errors?.['required']"
+            >Password is required.</span
+          >
+        </mat-error>
+      </mat-form-field>
+    </form>
+    <!-- Login button and forgot password link -->
+    <div class="mt-10">
+      <button
+        mat-raised-button
+        type="submit"
+        (click)="login()"
+        class="w-full text-white border bg-text text-lg py-2 rounded-full flex items-center justify-center"
+      >
+        LOGIN
+      </button>
+      <p
+        class="text-text text-center pt-4 cursor-pointer"
+        (click)="isLinkclicked()"
+      >
+        Forgot your password?
+      </p>
+    </div>
+   
+  </div>
+   <!-- Footer section -->
+    <div
+      class="container  mx-auto flex flex-col justify-between items-center text-sm text-gray-600"
+    >
+      <div class="mb-2 md:mb-0">
+        &copy; <span class="font-bold"> {{ currentYear }} ACOMdev, LLC. </span> All rights reserved.
+      </div>
+      <div class=" items-center space-x-4">
+        <span>Powered by <span class="font-bold">Trigent Software</span></span>
+      </div>
+      <div class=" items-center space-x-4">
+        <span>Version {{ version }}</span>
+      </div>
+  </div>
+</div>

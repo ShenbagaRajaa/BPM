@@ -1,0 +1,24 @@
+:host {
+  display: block;
+}
+
+.rotate-180 {
+  transform: rotate(180deg);
+}
+
+.transition-transform {
+  transition: transform 0.2s ease-in-out;
+}
+
+.mat-icon {
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+cdk-accordion-item {
+  margin-bottom: -1px;
+}
+
+cdk-accordion-item:last-child {
+  margin-bottom: 0;
+}

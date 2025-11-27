@@ -1,0 +1,106 @@
+<div class="w-full p-4 bg-lblue">
+  <!-- Title -->
+  <div class="flex justify-between">
+    <app-navigationbar
+      pageTitle="Resolve Problem"
+      [arrow]="false"
+    ></app-navigationbar>
+    <button
+      mat-icon-button
+      mat-dialog-close
+      class="text-text"
+      (click)="cancel()"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="bg-white shadow-lg p-4">
+    <!-- Dialog Content -->
+    <mat-dialog-content class="p-0 m-0 space-y-6">
+      <!-- Problem Details -->
+      <div>
+        <span class="text-md font-medium text-gray-800 mb-2">
+          Description of the problem:
+        </span>
+        <p
+          class="text-gray-600 break-words mb-3 text-justify whitespace-pre-line"
+        >
+          {{ data.reportingMessage }}
+        </p>
+
+        <!-- Attached File -->
+        <ng-container *ngIf="data.reportingFilePath">
+          <div class="flex items-center gap-2 mt-3">
+            <span class="text-sm font-medium text-gray-800">
+              Reference File:
+            </span>
+            <a
+              [href]="getFileUrl()"
+              target="_blank"
+              class="flex items-center gap-1 text-blue-600 hover:underline"
+            >
+              {{ existingFileName }}
+            </a>
+          </div>
+        </ng-container>
+      </div>
+
+      <!-- Solution Form -->
+      <form [formGroup]="resolveProblemForm" class="space-y-5">
+        <!-- Solution Textarea -->
+        <mat-form-field appearance="outline" floatLabel="always" class="w-full">
+          <mat-label>Solution</mat-label>
+          <textarea
+            matInput
+            formControlName="solutionContent"
+            rows="4"
+            placeholder="Enter your solution here"
+          ></textarea>
+          <mat-error
+            *ngIf="
+              resolveProblemForm.get('solutionContent')?.hasError('required')
+            "
+          >
+            Solution is required
+          </mat-error>
+        </mat-form-field>
+
+        <!-- File Upload -->
+        <div>
+          <app-file-upload
+            label="Upload File"
+            [accept]="'.txt,.png,.jpeg,.jpg'"
+            [maxSize]="5"
+            (fileSelected)="onFileChange($event)"
+          ></app-file-upload>
+        </div>
+      </form>
+    </mat-dialog-content>
+
+    <!-- Actions -->
+    <mat-dialog-actions
+      align="end"
+      class="flex justify-end items-center gap-3 mt-8 flex-wrap"
+    >
+      <div class="flex justify-end gap-4">
+        <button
+          type="reset"
+          mat-raised-button
+          mat-dialog-close
+          class="mat-raised-button-cancel px-4 py-2 rounded-md bg-lblue text-text disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          CANCEL
+        </button>
+        <button
+          [disabled]="submitButtonDisabled"
+          mat-raised-button
+          (click)="onSubmit()"
+          class="mat-raised-button px-4 py-2 rounded-md bg-text text-white disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Resolve Problem
+        </button>
+      </div>
+    </mat-dialog-actions>
+  </div>
+</div>

@@ -1,0 +1,41 @@
+<div class="flex items-start gap-3 bg-lblue w-[400px] rounded-md">
+  <!-- Mat-icon with conditional classes based on the event priority and event type -->
+  <mat-icon
+    [class.text-blue-500]="data.priority === 'Medium'"
+    [class.text-red-500]="data.priority === 'High'"
+    [class.text-gray-500]="data.eventType === 'Low'"
+  >
+    {{
+      data.eventType === "task"
+        ? "assignment"
+        : data.eventType === "approval"
+        ? "gavel"
+        : "info"
+    }}
+  </mat-icon>
+  <!-- Text content container -->
+  <div class="flex-1">
+    <!-- Event type label, styled with text-sm, font-medium, and text color -->
+    <p class="text-sm font-medium text-text">
+      {{ data.eventType }}
+    </p>
+    <!-- Event description, styled with text-sm and font-small -->
+    <p class="text-sm font-small text-text">
+      {{ data.description }}
+    </p>
+
+    <!-- Container for the created date and action link (View) -->
+    <div class="mt-2 flex justify-between items-center text-text">
+      <small class="text-gray-500">
+        {{ data.createdDate | date : "short" }}
+      </small>
+      <!-- 'View' link, styled with text, hover effect, padding, and cursor-pointer -->
+      <a
+        class="text-text font-semibold hover:bg-lblue p-2 cursor-pointer"
+        (click)="openLink($event)"
+      >
+        View
+      </a>
+    </div>
+  </div>
+</div>

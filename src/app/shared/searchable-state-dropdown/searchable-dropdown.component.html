@@ -1,0 +1,38 @@
+<mat-form-field appearance="outline" floatLabel="always" class="w-full">
+  <mat-label>
+    <mat-icon
+      *ngIf="hint"
+      class="text-gray-500 cursor-pointer hover:text-gray-700"
+      [matTooltip]="hintText"
+      matTooltipPosition="above"
+      >info
+    </mat-icon>
+    {{ label ? label : "Select" }}
+  </mat-label>
+
+  <mat-select
+    [formControl]="selectFormControl"
+    (selectionChange)="onSelectionChange($event)"
+    [placeholder]="'Select ' + label"
+    [multiple]="multiple"
+  >
+    <mat-option>
+      <ngx-mat-select-search
+        [formControl]="searchFormControl"
+        [placeholderLabel]="'Search ' + blankMsg"
+        [noEntriesFoundLabel]="'No matching ' + blankMsg + ' found'"
+      ></ngx-mat-select-search>
+    </mat-option>
+    <mat-option disabled *ngIf="filteredOptions.length === 0"
+      >No {{ blankMsg }} found</mat-option
+    >
+    <ng-container *ngFor="let option of filteredOptions">
+      <mat-option [value]="getOptionValue(option)">
+        {{ getOptionDisplay(option) }}
+      </mat-option>
+    </ng-container>
+  </mat-select>
+  <mat-error *ngIf="shouldShowError">
+    <span *ngIf="hasRequiredError">{{ label }} is required.</span>
+  </mat-error>
+</mat-form-field>

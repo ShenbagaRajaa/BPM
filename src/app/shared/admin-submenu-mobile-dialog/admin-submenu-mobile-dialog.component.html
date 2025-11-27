@@ -1,0 +1,116 @@
+<mat-dialog-content class="p-4 border-2 bg-lblue mobileLandscape:flex">
+  <!-- Close button section, with an icon to trigger close -->
+  <div class="dialog-content">
+    <div class="flex justify-center items-center mb-4">
+      <button class="p-2 rounded-full hover:bg-gray-200 focus:outline-none">
+        <mat-icon (click)="close()">close</mat-icon>
+      </button>
+    </div>
+
+    <div class="grid grid-cols-4 mobileLandscape:grid-cols-6 gap-6">
+      <!-- User Management submenu item -->
+      <div
+        class="submenu-item rounded-md hover:bg-gray-200 cursor-pointer"
+        *ngIf="hasPermissionToUserManagement"
+        (click)="navigateAndClose('/home/userManagement')"
+        matTooltip="User Management"
+      >
+        <mat-icon class="text-3xl text-text">group</mat-icon>
+        <span class="nav-text">User</span>
+      </div>
+      <!-- Default Settings submenu item -->
+      <div
+        class="submenu-item rounded-md hover:bg-gray-200 cursor-pointer"
+        *ngIf="hasPermissionToDefaultSettings"
+        (click)="navigateAndClose('/home/defaultConfigurations')"
+        matTooltip="Default Settings"
+      >
+        <mat-icon class="text-3xl text-text">settings</mat-icon>
+        <span class="nav-text">Default</span>
+      </div>
+
+      <!-- Department Management submenu item -->
+      <div
+        class="submenu-item rounded-md hover:bg-gray-200 cursor-pointer"
+        *ngIf="hasPermissionToDepartmentManagement"
+        (click)="navigateAndClose('/home/departmentManagement')"
+        matTooltip="Department Management"
+      >
+        <mat-icon class="text-3xl text-text">business</mat-icon>
+        <span class="nav-text">Department</span>
+      </div>
+      <!-- DR Skills Management submenu item -->
+      <div
+        class="submenu-item rounded-md hover:bg-gray-200 cursor-pointer"
+        *ngIf="hasPermissionToDRSkillManagement"
+        (click)="navigateAndClose('/home/skillManagement')"
+        matTooltip="DR Skills Management"
+      >
+        <mat-icon class="text-3xl text-text">equalizer</mat-icon>
+        <span class="nav-text">DR Skills</span>
+      </div>
+      <!-- DR Team Management submenu item -->
+      <div
+        class="submenu-item rounded-md hover:bg-gray-200 cursor-pointer"
+        *ngIf="hasPermissionToDRTeamManagement"
+        (click)="navigateAndClose('/home/drTeamManagement')"
+        matTooltip="DR Team Management"
+      >
+        <mat-icon class="text-3xl text-text">filter_vintage</mat-icon>
+        <span class="nav-text">DR Team</span>
+      </div>
+      <!-- Plan Type Management submenu item -->
+      <div
+        class="submenu-item rounded-md hover:bg-gray-200 cursor-pointer"
+        *ngIf="hasPermissionToPlanTypeManagement"
+        (click)="navigateAndClose('/home/planTypeManagement')"
+        matTooltip="Plan Type Management"
+      >
+        <mat-icon class="text-3xl text-text">view_list</mat-icon>
+        <span class="nav-text">Plan Type</span>
+      </div>
+      <!-- Site Management submenu item -->
+      <div
+        class="submenu-item rounded-md hover:bg-gray-200 cursor-pointer"
+        *ngIf="hasPermissionToSiteManagement"
+        (click)="navigateAndClose('/home/siteManagement')"
+        matTooltip="Site Management"
+      >
+        <mat-icon class="text-3xl text-text">location_on</mat-icon>
+        <span class="nav-text">Site</span>
+      </div>
+      <!-- Role Management submenu item -->
+      <div
+        class="submenu-item rounded-md hover:bg-gray-200 cursor-pointer"
+        *ngIf="hasPermissionToRoleManagement"
+        class="submenu-item"
+        (click)="navigateAndClose('/home/roleManagement')"
+        matTooltip="Role Management"
+      >
+        <mat-icon class="text-3xl text-text">recent_actors</mat-icon>
+        <span class="nav-text">Role</span>
+      </div>
+      <!-- Plan Level Management submenu item -->
+      <div
+        class="submenu-item rounded-md hover:bg-gray-200 cursor-pointer"
+        *ngIf="hasPermissionToPlanLevelManagement"
+        (click)="navigateAndClose('/home/planLevelManagement')"
+        matTooltip="Plan Level Management"
+      >
+        <mat-icon class="text-3xl text-text">category</mat-icon>
+        <span class="nav-text">Plan Level</span>
+      </div>
+      <!-- System Management submenu item -->
+      <div
+        class="submenu-item rounded-md hover:bg-gray-200 cursor-pointer"
+        *ngIf="hasPermissionToSystemManagement"
+        class="submenu-item"
+        (click)="navigateAndClose('/home/systemManagement')"
+        matTooltip="System Management"
+      >
+        <mat-icon class="text-3xl text-text">settings_applications</mat-icon>
+        <span class="nav-text">System</span>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>

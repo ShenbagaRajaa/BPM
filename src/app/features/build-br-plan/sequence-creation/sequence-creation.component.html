@@ -1,0 +1,56 @@
+<div class="p-4 md:p-4 lg:p-4 flex flex-col bg-lblue">
+  <!-- Navigation bar with a dynamic page title and no back arrow -->
+  <div class="flex justify-between">
+    <app-navigationbar
+      [pageTitle]="pageTitle"
+      [arrow]="false"
+    ></app-navigationbar>
+    <button mat-icon-button class="pt-8" mat-dialog-close>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Form for creating a new sequence -->
+  <form
+    [formGroup]="createSequence"
+    class="w-full bg-white shadow-lg p-2 md:p-4 flex-grow"
+  >
+    <div class="flex flex-col w-full space-y-6 md:space-y-2">
+      <!-- Input field for sequence number with validation -->
+      <app-input-field
+        label="Sequence Number"
+        placeHolder="Sequence Number"
+        class="w-full md:text-lg"
+        [formGroup]="createSequence"
+        controlName="sequenceNumber"
+        [minValue]="6"
+        [maxValue]="10"
+      ></app-input-field>
+    </div>
+    <!-- Button section for cancel and submit -->
+    <div class="flex flex-row col-span-4 py-6 md:py-8 mt-6 md:mt-4">
+      <div class="flex-1"></div>
+      <div class="flex items-center justify-end space-x-4 md:space-x-6">
+        <!-- Cancel button to reset the form -->
+        <button
+          type="reset"
+          class="mat-raised-button-cancel md:text-lg text-toolbarBg bg-text px-6 md:px-8 py-3 md:py-4 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+          mat-raised-button
+          (click)="cancel()"
+        >
+          CANCEL
+        </button>
+        <!-- Submit button for adding a new sequence, disabled when conditions aren't met -->
+        <button
+          class="mat-raised-button text-toolbarBg bg-text px-6 md:px-8 py-3 md:py-4 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+          mat-raised-button
+          (click)="addNewSequence()"
+          [disabled]="saveButtonDisabled"
+          type="submit"
+        >
+          {{ button }}
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,107 @@
+<div class="rounded-lg border p-4 md:block hidden">
+  <div
+    class="flex flex-wrap items-center justify-between space-y-4 md:space-y-0"
+  >
+    <div class="w-full md:w-1/3">
+      <!-- Search Input -->
+      <app-input-field
+        label="Search"
+        placeHolder="Search By Plan..."
+        (activeValue)="externalFilterChanged($event)"
+      >
+      </app-input-field>
+    </div>
+    <!-- Filter Dropdown -->
+    <div class="hidden md:block w-full md:w-auto">
+      <app-dropdown
+        label="Filter By Task Status"
+        [options]="filterByTaskStatus"
+        selectedValue="All"
+        blankMsg="task status"
+        (activeValue)="externalFilterChanged($event)"
+      ></app-dropdown>
+    </div>
+  </div>
+  <!-- AG Grid Table for Task Data -->
+  <div class="mt-2">
+    <ag-grid-angular
+      [rowData]="rowData"
+      [columnDefs]="displayedColumns"
+      class="ag-theme-quartz"
+      [domLayout]="'autoHeight'"
+      [pagination]="pagination"
+      [rowHeight]="50"
+      [paginationPageSize]="paginationPageSize"
+      [paginationPageSizeSelector]="paginationPageSizeSelector"
+      overlayNoRowsTemplate="<div style='position: absolute; top: 60px; left: 50%; transform: translateX(-50%); font-size: 16px; font-weight: bold; color: #555;'>
+        No tasks found matching your criteria.
+      </div>"
+    />
+  </div>
+</div>
+<!-- Mobile View -->
+<div class="block md:hidden py-4">
+  @if(rowData.length !== 0){ @for(data of rowData; track rowData){
+  <div class="w-full bg-gray-100 p-4 rounded-lg mb-4 shadow-md">
+    <div class="flex justify-between">
+      <h5 class="text-lg font-medium text-text" (click)="viewTask(data)">
+        {{ data.taskTitle }}
+      </h5>
+      <mat-icon
+        [matMenuTriggerFor]="aboveMenu"
+        *ngIf="!hideEdit && !hideDelete"
+      >
+        more_vert
+      </mat-icon>
+
+      <mat-menu #aboveMenu="matMenu" yPosition="above">
+        <button mat-menu-item (click)="editTask(data)" *ngIf="!hideEdit">
+          <mat-icon class="stroke-current stroke-1 mr-2">edit</mat-icon> Edit
+        </button>
+        <button
+          mat-menu-item
+          (click)="
+            confirmDelete(
+              data.id,
+              data.planStatus ?? '',
+              data.sequenceStatus ?? ''
+            )
+          "
+          [disabled]="data.planStatus !== 'PlanBuildInProgress'"
+          *ngIf="!hideDelete"
+        >
+          <mat-icon class="stroke-current stroke-1 mr-2"
+            >delete_forever</mat-icon
+          >
+          Delete
+        </button>
+      </mat-menu>
+    </div>
+    <p class="text-sm text-justify">
+      {{
+        data.taskDescription.length > 100
+          ? (data.taskDescription | slice : 0 : 100) + "..."
+          : data.taskDescription
+      }}
+    </p>
+
+    <div class="flex flex-row">
+      <div class="flex justify-between items-center mt-2 text-sm">
+        @if(hasPermissionToResolveProblem &&( data.status === 'InTestProblem' ||
+        data.status === 'InExecuteProblem')){
+        <button
+          class="bg-[#3a3a81] text-white px-4 py-1 rounded text-sm font-medium shadow-sm"
+          (click)="getTaskProblemDetails(data.id)"
+        >
+          RESOLVE
+        </button>
+        }
+      </div>
+      <div class="flex-1"></div>
+      <div class="flex justify-end">
+        <app-status-highlighter [status]="data.status"></app-status-highlighter>
+      </div>
+    </div>
+  </div>
+  } }@else{ No Tasks Found. }
+</div>

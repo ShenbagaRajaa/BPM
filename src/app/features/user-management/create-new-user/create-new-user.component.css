@@ -1,0 +1,5 @@
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none; /* IE and Edge */
+  overflow-y: auto; /* Ensure scrolling works */
+}

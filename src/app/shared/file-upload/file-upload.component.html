@@ -1,0 +1,54 @@
+<div class="relative w-full">
+  <!-- Always-floating label -->
+  <label
+    class="absolute -top-2 left-3 bg-white px-1 text-xs font-medium text-text"
+  >
+    {{ label }}
+  </label>
+
+  <!-- Outlined container -->
+  <div
+    class="border border-gray-300 rounded-md flex items-center justify-between px-3 py-3 hover:border-text focus-within:outline focus-within:outline-1 focus-within:outline-text transition-all duration-200 bg-white"
+  >
+    <!-- File name or placeholder -->
+    <span
+      class="text-gray-700 text-sm truncate"
+      *ngIf="uploadedFileName; else placeholder"
+    >
+      {{ uploadedFileName }}
+    </span>
+    <ng-template #placeholder>
+      <span class="text-gray-400 text-sm">No file chosen</span>
+    </ng-template>
+
+    <!-- Buttons -->
+    <div class="flex items-center space-x-2">
+      <button
+        type="button"
+        class="flex items-center gap-1 text-text border border-text px-3 py-1 rounded-md hover:bg-lblue text-sm font-medium"
+        (click)="fileInput.click()"
+      >
+        <mat-icon class="text-base">upload_file</mat-icon>
+        Choose File
+      </button>
+
+      <button
+        *ngIf="uploadedFileName"
+        type="button"
+        class="text-gray-400 hover:text-red-500"
+        (click)="clearFile()"
+      >
+        <mat-icon class="text-lg">close</mat-icon>
+      </button>
+    </div>
+
+    <!-- Hidden file input -->
+    <input
+      #fileInput
+      type="file"
+      [accept]="accept"
+      (change)="onFileChange($event)"
+      class="hidden"
+    />
+  </div>
+</div>

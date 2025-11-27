@@ -1,0 +1,11 @@
+.custom-chip {
+  background-color: transparent !important;
+  border: 2px solid currentColor;
+  color: black;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0px 10px;
+  border-radius: 16px;
+  width: fit-content;
+  height: fit-content;
+}

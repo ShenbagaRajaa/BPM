@@ -1,0 +1,67 @@
+<div
+  class="md:p-4 tablet:px-4 pb-16 h-screen flex flex-col bg-mBgBlue tablet:bg-lblue md:bg-lblue tablet:no-scollbar"
+>
+  <!-- Navigation bar component with dynamic page title -->
+  <app-navigationbar [pageTitle]="pageTitle"></app-navigationbar>
+
+  <div
+    class="w-full bg-white shadow-lg p-4 pb-64 tablet:pb-40 md:pb-20 md:block h-200 flex-grow no-scollbar"
+  >
+    <!-- Role creation form -->
+    <form
+      [formGroup]="createRole"
+      (ngSubmit)="add($event)"
+      class="w-full mt-4 grid grid-cols-1 tablet:grid-cols-2 md:grid-cols-3 gap-4"
+    >
+      <!-- Role Name Input Field (Spans 2 columns on medium screens) -->
+      <div class="flex flex-col w-full md:col-span-2">
+        <app-input-field
+          label="Role Name"
+          placeHolder="Text"
+          class="w-full"
+          [maxValue]="50"
+          [formGroup]="createRole"
+          controlName="roleName"
+        ></app-input-field>
+      </div>
+      <!-- Status Dropdown Field -->
+      <div class="flex flex-col w-full">
+        <app-dropdown
+          label="Status"
+          [options]="status"
+          [formGroup]="createRole"
+          controlName="status"
+        ></app-dropdown>
+      </div>
+    </form>
+    <!-- Component for assigning permissions to the role -->
+    <app-assign-permission-to-role
+      (activeValue)="savePermissions($event)"
+      [child]="true"
+      [roleId]="roleId"
+    ></app-assign-permission-to-role>
+
+    <div class="flex flex-row md:col-span-3 tablet:grid-cols-2">
+      <div class="flex-1"></div>
+      <div class="items-center justify-end">
+        <!-- Cancel Button: Navigates back -->
+        <button
+          class="mat-raised-button-cancel mr-4 text-toolbarBg bg-text px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+          mat-raised-button
+          (click)="back()"
+        >
+          CANCEL
+        </button>
+        <!-- Save Button: Triggers form submission -->
+        <button
+          class="mat-raised-button text-toolbarBg bg-text px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+          mat-raised-button
+          (click)="add(createRole)"
+          [disabled]="saveButtonDisabled"
+        >
+          SAVE
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

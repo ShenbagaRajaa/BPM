@@ -1,0 +1,142 @@
+<div class="profile-container md:p-4 px-4 bg-mBgBlue md:bg-lblue h-screen">
+  <!-- Navigation bar component with dynamic page title -->
+  <app-navigationbar
+    [pageTitle]="pageTitle"
+    [button]="pageTitle === 'Profile'"
+    [buttonLabel]="editButton"
+    (activeValue)="navigateToEditUser()"
+  ></app-navigationbar>
+  <!-- Profile card that contains user information -->
+  <mat-card class="profile-card md:pb-40 pb-48">
+    <mat-card-header
+      class="w-full bg-white shadow-lg p-4 md:block h-200 flex-grow"
+    >
+      <!-- Profile image container - conditionally displays profile image or placeholder -->
+      <div class="profile-header">
+        <div
+          *ngIf="userDetails.uploadPhotoPath"
+          class="profile-image-container"
+        >
+          <img
+            *ngIf="profilePhotoUrl"
+            [src]="profilePhotoUrl"
+            alt="Profile Picture"
+            class="profile-image"
+          />
+        </div>
+
+        <!-- Placeholder for profile image when no photo is uploaded, displaying user's initials -->
+        <div
+          *ngIf="!userDetails.uploadPhotoPath"
+          class="profile-pic-placeholder flex justify-center items-center rounded-full"
+          style="width: 100px; height: 100px; font-size: 40px"
+        >
+          {{ employeeInitial }}
+        </div>
+        <!-- User name and title display -->
+        <div class="user-title-wrapper">
+          <mat-card-title class="user-name">
+            <span>{{ userDetails.title }}</span>
+            <span class="ml-2"
+              >{{ userDetails.employeeFirstName }}
+              {{ userDetails.employeeLastName }}</span
+            >
+          </mat-card-title>
+        </div>
+      </div>
+    </mat-card-header>
+    <!-- Profile card content with expandable sections for user details -->
+    <mat-card-content
+      class="w-full bg-white shadow-lg p-4 pb-16 md:block h-200 flex-grow"
+    >
+      <div class="info-grid">
+        <!-- First expandable panel for personal information -->
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title class="panel-title">
+              <mat-icon class="section-icon">person</mat-icon>
+              Personal Information
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div class="info-section">
+            <mat-list>
+              <!-- Email info section -->
+              <mat-list-item>
+                <mat-icon matListItemIcon>email</mat-icon>
+                <div matListItemTitle>Email</div>
+                <div matListItemLine>{{ userDetails.email }}</div>
+              </mat-list-item>
+
+              <mat-divider></mat-divider>
+
+              <mat-list-item>
+                <!-- Phone info section -->
+                <mat-icon matListItemIcon>phone</mat-icon>
+                <div matListItemTitle>Phone</div>
+                <div matListItemLine>{{ userDetails.mobileNumber }}</div>
+              </mat-list-item>
+
+              <mat-divider></mat-divider>
+              <!-- Address info section -->
+              <mat-list-item>
+                <mat-icon matListItemIcon>location_on</mat-icon>
+                <div matListItemTitle>Address</div>
+                <div matListItemLine>{{ userDetails.address }}</div>
+                <div matListItemLine>
+                  {{ userDetails.city }}, {{ userDetails.state }}
+                  {{ userDetails.zipCode }}
+                </div>
+                <div matListItemLine>{{ userDetails.country }}</div>
+              </mat-list-item>
+            </mat-list>
+          </div>
+        </mat-expansion-panel>
+        <!-- Second expandable panel for emergency contact information -->
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title class="panel-title">
+              <!-- Emergency Contact icon and title -->
+              <mat-icon class="section-icon">emergency</mat-icon>
+              Emergency Contact
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div class="info-section">
+            <mat-list>
+              <!-- Emergency contact name and relationship -->
+
+              <mat-list-item>
+                <mat-icon matListItemIcon>person_outline</mat-icon>
+                <div matListItemTitle>
+                  {{ userDetails.emergencyContactName }}
+                </div>
+                <div matListItemLine>
+                  {{ userDetails.emergencyContactRelationship }}
+                </div>
+              </mat-list-item>
+
+              <mat-divider></mat-divider>
+              <!-- Emergency contact phone -->
+              <mat-list-item>
+                <mat-icon matListItemIcon>phone</mat-icon>
+                <div matListItemLine>
+                  {{ userDetails.emergencyContactPhone }}
+                </div>
+              </mat-list-item>
+
+              <mat-divider></mat-divider>
+              <!-- Emergency contact email -->
+              <mat-list-item>
+                <mat-icon matListItemIcon>email</mat-icon>
+                <div matListItemLine>
+                  {{ userDetails.emergencyContactEmail }}
+                </div>
+              </mat-list-item>
+            </mat-list>
+          </div>
+        </mat-expansion-panel>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

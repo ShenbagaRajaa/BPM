@@ -1,0 +1,92 @@
+<mat-form-field appearance="outline" floatLabel="always" class="w-full">
+  <mat-label>{{ label }}</mat-label>
+  <ng-container *ngIf="!formGroup">
+    <mat-select
+      [(ngModel)]="selectedValue"
+      (selectionChange)="onSelectionChange($event)"
+      [disabled]="disabled"
+      [placeholder]="label"
+    >
+      <mat-option disabled *ngIf="options.length === 0"
+        >No {{ blankMsg }} found</mat-option
+      >
+      <ng-container *ngFor="let option of options">
+        <mat-option
+          [value]="
+            option.code ||
+            option.id ||
+            option.type ||
+            option.shortName ||
+            option
+          "
+          >{{
+            option.planName ||
+              option.name ||
+              option.siteName ||
+              option.type ||
+              option.roleName ||
+              option.sequenceNumber ||
+              option.planIdentifier ||
+              option
+          }}</mat-option
+        >
+      </ng-container>
+    </mat-select>
+  </ng-container>
+  <ng-container *ngIf="formGroup" [formGroup]="formGroup">
+    <mat-select
+      [formControlName]="controlName"
+      (selectionChange)="onSelectionChange($event)"
+      [multiple]="multiple"
+      [placeholder]="'Select ' + label"
+    >
+      <mat-option disabled *ngIf="options.length === 0"
+        >No {{ label }} found</mat-option
+      >
+      <ng-container *ngFor="let option of options">
+        <mat-option
+          [value]="
+            option.skillName ||
+            option.systemId ||
+            option.name ||
+            option.state ||
+            option.city ||
+            option.id ||
+            option.planTypeId ||
+            option.planLevelId ||
+            option.departmentId ||
+            option.siteId ||
+            option
+          "
+          >{{
+            option.planName ||
+              option.systemName ||
+              option.employeeName ||
+              option.siteName ||
+              option.planTypeName ||
+              option.planLevelName ||
+              option.departmentName ||
+              option.roleName ||
+              option.name ||
+              option.teamName ||
+              option.state ||
+              option.city ||
+              option.skillName ||
+              option.systemTypeName ||
+              option
+          }}</mat-option
+        >
+      </ng-container>
+    </mat-select>
+  </ng-container>
+  <mat-error
+    *ngIf="
+      formGroup?.get(controlName)?.touched &&
+      formGroup.get(controlName)?.invalid
+    "
+  >
+    <span *ngIf="formGroup?.get(controlName)?.errors?.['required']"
+      >{{ label }} is required.</span
+    >
+  </mat-error>
+</mat-form-field>

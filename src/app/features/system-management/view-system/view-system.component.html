@@ -1,0 +1,90 @@
+<div
+  class="w-full bg-white shadow-lg p-4 pb-8 md:block flex-grow overflow-auto max-h-[80vh]"
+>
+  <!-- Navigation bar and close button section -->
+  <div class="flex justify-between">
+    <app-navigationbar
+      pageTitle="View System"
+      [arrow]="false"
+    ></app-navigationbar>
+    <button mat-icon-button class="pt-2" mat-dialog-close>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div class="user-info-row flex flex-wrap">
+    <!-- System Name detail box -->
+    <div class="user-detail-box w-full p-3 border border-gray-300 rounded-md">
+      <div class="flex items-center mb-2">
+        <div class="user-detail-label font-bold text-gray-700 mr-2">
+          System Name:
+        </div>
+        <div class="user-detail-value text-gray-600 break-words">
+          {{ data.systemName }}
+        </div>
+      </div>
+    </div>
+    <!-- System Code detail box -->
+    <div
+      class="user-detail-box w-full md:w-full p-3 border border-gray-300 rounded-md"
+    >
+      <div class="flex items-center mb-2">
+        <div class="user-detail-label font-bold text-gray-700 mr-2">
+          System Code:
+        </div>
+        <div class="user-detail-value text-gray-600 break-words">
+          {{ data.systemCode }}
+        </div>
+      </div>
+    </div>
+    <!-- Description detail box -->
+    <div
+      class="user-detail-box w-full md:w-full p-2 border border-gray-300 rounded-md"
+    >
+      <div class="flex items-center mb-2">
+        <div class="user-detail-label font-bold text-gray-700 mr-2">
+          Description:
+        </div>
+        <div class="user-detail-value text-gray-600 break-words text-justify">
+          {{ data.description || "No description available" }}
+        </div>
+      </div>
+    </div>
+    <!-- Status detail box -->
+    <div
+      class="user-detail-box w-full md:w-full p-2 border border-gray-300 rounded-md"
+    >
+      <div class="flex items-center mb-2">
+        <div class="user-detail-label font-bold text-gray-700 mr-2">
+          Status:
+        </div>
+        <div class="user-detail-value text-gray-600 break-words">
+          {{ data.status }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- History section displaying created/last changed info -->
+  <div class="user-info-row flex flex-wrap">
+    <div
+      class="user-detail-box w-full md:w-full p-2 border border-gray-300 rounded-md"
+    >
+      <div class="flex flex-col md:flex-row items-start md:items-center mb-2">
+        <div class="user-detail-label font-bold text-gray-700 mr-2 md:w-1/4">
+          History:
+        </div>
+        <div
+          class="user-detail-value text-gray-600 break-words w-full md:w-1/3 mb-2 md:mb-0"
+        >
+          {{ data.history?.createdBy }}<br />
+          {{ data.history?.createdDate }}
+        </div>
+        <div
+          class="user-detail-value text-gray-600 break-words w-full md:w-1/3"
+        >
+          {{ data.history?.lastChangedBy }}<br />
+          {{ data.history?.lastChangedDate }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

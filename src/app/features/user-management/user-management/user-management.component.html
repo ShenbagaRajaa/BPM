@@ -1,0 +1,40 @@
+<div
+  class="md:p-4 md:pb-16 tablet:px-4 h-screen flex flex-col bg-mBgBlue tablet:bg-lblue md:bg-lblue"
+>
+  <!-- Navigation Bar Component, displays the title "User Management" and hides the back arrow -->
+  <app-navigationbar
+    [arrow]="false"
+    pageTitle="User Management"
+  ></app-navigationbar>
+  <div
+    class="w-full bg-mBgBlue md:bg-white tablet:bg-white shadow-lg p-4 flex-grow pb-28 md:pb-20"
+  >
+    <div class="grid grid-cols-1 tablet:grid-cols-2 md:grid-cols-3 gap-4 m-8">
+      <!-- Role Permissions card, conditionally shown if the user has permission to assign permissions to roles -->
+      <div
+        class="w-full bg-gray-200 rounded-lg shadow-lg border md:p-4 flex flex-col cursor-pointer items-center justify-center text-center"
+        routerLink="assignPermissionToRole"
+        *ngIf="hasPermissionToAssignPermissionsToRole"
+      >
+        <!-- Title of the card -->
+        <h2 class="text-lg pb-10">Role Permissions</h2>
+        <div class="text-red items-center flex flex-row text-text gap-2">
+          <p class="relative top-1">Click to detailed overview</p>
+          <mat-icon>arrow_forward</mat-icon>
+        </div>
+      </div>
+
+      <!-- User Creation card, always visible, links to the "userCreation" page -->
+      <div
+        class="w-full bg-gray-200 rounded-lg shadow-lg border md:p-4 flex flex-col cursor-pointer items-center justify-center text-center"
+        routerLink="userCreation"
+      >
+        <h2 class="text-lg pb-10">User Creation</h2>
+        <div class="text-red items-center flex flex-row text-text gap-2">
+          <p class="relative top-1">Click to detailed overview</p>
+          <mat-icon>arrow_forward</mat-icon>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

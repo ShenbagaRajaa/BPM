@@ -1,0 +1,84 @@
+<div [class]="classValue" class="tablet:bg-lblue tablet:px-4">
+  <div class="flex justify-between">
+    <app-navigationbar
+      [pageTitle]="pageTitle"
+      [arrow]="backButton"
+    ></app-navigationbar>
+    <!-- Close Button (Visible when no backButton is provided) -->
+    <button mat-icon-button class="pt-8" mat-dialog-close *ngIf="!backButton">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div [class]="insideDivStyle">
+    <!-- Form for creating/updating a skill -->
+    <form
+      [formGroup]="createSkillForm"
+      (ngSubmit)="saveSkill()"
+      class="w-full mt-4 grid grid-cols-1 tablet:grid-cols-2 md:grid-cols-2 gap-4 mobileLandscape:grid-cols-2"
+    >
+      <!-- Input Field for DR Skill Name -->
+      <div class="flex flex-col w-full md:col-span-1">
+        <app-input-field
+          label="DR Skill Name"
+          placeHolder="Enter DR Skill Name"
+          class="w-full"
+          [formGroup]="createSkillForm"
+          controlName="skillName"
+          [maxValue]="20"
+          [minValue]="5"
+          patternErrorMessage="DR Skill must be alphanumeric"
+        ></app-input-field>
+      </div>
+      <!-- Dropdown for selecting Skill Status -->
+      <div class="flex flex-col w-full md:col-span-1">
+        <app-dropdown
+          label="Status"
+          [options]="statusOptions"
+          [formGroup]="createSkillForm"
+          controlName="status"
+        ></app-dropdown>
+      </div>
+      <!-- Input Field for Skill Description -->
+      <div
+        class="flex flex-col w-full tablet:col-span-2 md:col-span-2 mobileLandscape:col-span-2"
+      >
+        <app-input-field
+          label="Description"
+          placeHolder="Enter a description (optional)"
+          class="w-full"
+          [formGroup]="createSkillForm"
+          controlName="description"
+          [maxValue]="500"
+        ></app-input-field>
+      </div>
+
+      <!-- Action Buttons for Cancel and Save/Update -->
+
+      <div
+        class="flex flex-row md:col-span-2 mt-4 tablet:col-span-2 mobileLandscape:col-span-2"
+      >
+        <div class="flex-1"></div>
+        <div class="items-center justify-end">
+          <!-- Cancel Button -->
+          <button
+            class="mat-raised-button-cancel mr-4 text-toolbarBg bg-text px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+            mat-raised-button
+            (click)="cancel()"
+          >
+            CANCEL
+          </button>
+          <!-- Save/Update Button -->
+          <button
+            class="mat-raised-button text-toolbarBg bg-text px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+            mat-raised-button
+            type="submit"
+            [disabled]="saveButtonDisabled"
+          >
+            SAVE
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

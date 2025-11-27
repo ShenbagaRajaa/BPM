@@ -1,0 +1,72 @@
+<div class="w-full bg-mBgBlue tablet:bg-lblue md:bg-white shadow-lg p-4">
+  <div class="flex flex-row justify-end align-end gap-4">
+    <div class="w-full tablet:w-[40%] md:w-[40%] lg:w-[30%]">
+      <app-searchable-dropdown
+        [value]="selectedPlan"
+        label="Filter By"
+        (activeValue)="getSelectedPlan($event); removeLS()"
+        [options]="filterByOptions"
+      ></app-searchable-dropdown>
+    </div>
+  </div>
+  <div
+    class="grid grid-cols-1 tablet:grid-cols-2 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-3 gap-4"
+  >
+    <div
+      id="chart"
+      class="flex flex-col w-full md:col-span-2 tablet:col-span-2 lg:col-span-1 xl:col-span-1 bg-white rounded-2xl border border-gray-200 shadow-xl p-4 transition duration-300 hover:shadow-2xl"
+    >
+      <apx-chart
+        [series]="planWithStatus.series!"
+        [colors]="planWithStatus.colors!"
+        [chart]="planWithStatus.chart!"
+        [labels]="planWithStatus.labels!"
+        [responsive]="planWithStatus.responsive!"
+        [title]="planWithStatus.title!"
+        [plotOptions]="planWithStatus.plotOptions!"
+        [dataLabels]="planWithStatus.dataLabels!"
+        [tooltip]="planWithStatus.tooltip!"
+        [legend]="planWithStatus.legend!"
+        [noData]="taskWithStatus.noData!"
+      ></apx-chart>
+    </div>
+
+    <div
+      id="chart"
+      class="flex flex-col w-full md:col-span-2 tablet:col-span-2 lg:col-span-1 xl:col-span-1 bg-white rounded-2xl border border-gray-200 shadow-xl p-4 transition duration-300 hover:shadow-2xl"
+    >
+      <apx-chart
+        [series]="sequenceWithStatus.series!"
+        [chart]="sequenceWithStatus.chart!"
+        [labels]="sequenceWithStatus.labels!"
+        [responsive]="sequenceWithStatus.responsive!"
+        [title]="sequenceWithStatus.title!"
+        [plotOptions]="sequenceWithStatus.plotOptions!"
+        [dataLabels]="sequenceWithStatus.dataLabels!"
+        [tooltip]="sequenceWithStatus.tooltip!"
+        [colors]="sequenceWithStatus.colors!"
+        [legend]="sequenceWithStatus.legend!"
+        [noData]="taskWithStatus.noData!"
+      ></apx-chart>
+    </div>
+
+    <div
+      id="chart"
+      class="flex flex-col w-full md:col-span-4 tablet:col-span-2 lg:col-span-1 xl:col-span-1 bg-white rounded-2xl border border-gray-200 shadow-xl p-4 transition duration-300 hover:shadow-2xl justify-center"
+    >
+      <apx-chart
+        [series]="taskWithStatus.series!"
+        [chart]="taskWithStatus.chart!"
+        [labels]="taskWithStatus.labels!"
+        [responsive]="taskWithStatus.responsive!"
+        [title]="taskWithStatus.title!"
+        [plotOptions]="taskWithStatus.plotOptions!"
+        [dataLabels]="taskWithStatus.dataLabels!"
+        [tooltip]="taskWithStatus.tooltip!"
+        [colors]="taskWithStatus.colors!"
+        [legend]="taskWithStatus.legend!"
+        [noData]="taskWithStatus.noData!"
+      ></apx-chart>
+    </div>
+  </div>
+</div>

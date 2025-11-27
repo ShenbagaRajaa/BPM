@@ -1,0 +1,42 @@
+.modern-dropdown {
+  width: 100px;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.modern-dropdown:hover {
+  border-color: var(--text);
+}
+
+.modern-dropdown:focus {
+  outline: none;
+  border-color: var(--text);
+  box-shadow: 0 0 6px rgba(0, 123, 255, 0.5);
+}
+
+.modern-dropdown option {
+  font-size: 14px;
+  padding: 8px 12px;
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+}
+
+.modern-dropdown option:hover {
+  background-color: black !important;
+}
+
+.modern-dropdown option:checked {
+  background-color: #e9ecef;
+  color: var(--text);
+}
+
+.mat-mdc-form-field-subscript-wrapper {
+  display: none;
+}

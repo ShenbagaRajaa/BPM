@@ -1,0 +1,83 @@
+<div [class]="classValue" class="tablet:bg-lblue tablet:px-4">
+  <app-navigationbar
+    [pageTitle]="pageTitle"
+    [arrow]="backButton"
+  ></app-navigationbar>
+
+  <!-- Department creation/edit form -->
+  <div class="w-full bg-white shadow-lg p-4 pb-64 md:block h-200 flex-grow">
+    <form
+      [formGroup]="departmentForm"
+      (ngSubmit)="saveDepartment()"
+      class="w-full mt-4 grid grid-cols-1 tablet:grid-cols-2 md:grid-cols-3 gap-4"
+    >
+      <!-- Department Name input field spanning 2 columns on larger screens -->
+      <div class="flex flex-col w-full tablet:col-span-2">
+        <app-input-field
+          label="Department Name"
+          placeHolder="Enter department name"
+          class="w-full"
+          [formGroup]="departmentForm"
+          controlName="departmentName"
+          [maxValue]="45"
+        ></app-input-field>
+      </div>
+      <!-- Department Code input field -->
+      <div class="flex flex-col w-full">
+        <app-input-field
+          label="Department Code"
+          placeHolder="Enter Code"
+          [minValue]="8"
+          [maxValue]="20"
+          class="w-full"
+          patternErrorMessage="Department Code must be alphanumeric and  can include underscores and spaces"
+          [formGroup]="departmentForm"
+          controlName="departmentCode"
+        ></app-input-field>
+      </div>
+      <!-- Status dropdown field -->
+      <div class="flex flex-col w-full">
+        <app-dropdown
+          label="Status"
+          [options]="statusOptions"
+          [formGroup]="departmentForm"
+          controlName="status"
+        ></app-dropdown>
+      </div>
+      <!-- Description input field spanning full width -->
+      <div class="flex flex-col w-full tablet:col-span-2 md:col-span-3">
+        <app-input-field
+          label="Description"
+          placeHolder="Enter a description (optional)"
+          class="w-full"
+          [formGroup]="departmentForm"
+          controlName="description"
+          [maxValue]="500"
+        ></app-input-field>
+      </div>
+
+      <div class="flex flex-row md:col-span-3 tablet:col-span-2">
+        <div class="flex-1"></div>
+        <div class="items-center justify-end">
+          <!-- Cancel button (triggers cancel method) -->
+          <button
+            class="mat-raised-button-cancel mr-4 text-toolbarBg bg-text px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+            mat-raised-button
+            (click)="cancel()"
+          >
+            CANCEL
+          </button>
+          <!-- Save button (disabled if form is invalid) -->
+          <button
+            class="mat-raised-button text-toolbarBg bg-text px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+            mat-raised-button
+            type="submit"
+            [disabled]="saveButtonDisabled"
+          >
+            SAVE
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

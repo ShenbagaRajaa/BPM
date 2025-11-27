@@ -1,0 +1,19 @@
+.custom-username .mdc-text-field--outlined {
+  background-color: white;
+  border-radius: 28px !important;
+}
+
+.custom-username .mdc-notched-outline__leading {
+  border-top-left-radius: 28px;
+  border-bottom-left-radius: 28px;
+  --mdc-outlined-text-field-container-shape: 28px !important;
+}
+
+.custom-username .mdc-notched-outline__trailing {
+  border-top-right-radius: 28px !important;
+  border-bottom-right-radius: 28px !important;
+}
+
+.custom-username .mdc-notched-outline {
+  --mdc-notched-outline-border-width: 1px !important;
+}

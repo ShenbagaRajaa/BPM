@@ -1,0 +1,70 @@
+<div [class]="classValue" class="tablet:bg-lblue tablet:p-4">
+  <!-- Navigation bar component that accepts page title and a back button -->
+  <app-navigationbar
+    [pageTitle]="pageTitle"
+    [arrow]="backButton"
+  ></app-navigationbar>
+
+  <div class="w-full bg-white shadow-lg p-4 pb-64 md:block h-200 flex-grow">
+    <!-- Form for creating a system type, bound to 'createsystemType' form group -->
+    <form
+      [formGroup]="createsystemType"
+      (ngSubmit)="add($event)"
+      class="w-full mt-4 grid grid-cols-1 md:grid-cols-2 gap-4"
+    >
+      <!-- Input field for 'System Type Name' -->
+      <div class="flex flex-col w-full">
+        <app-input-field
+          label="System Type Name"
+          placeHolder="Text"
+          class="w-full"
+          [formGroup]="createsystemType"
+          controlName="systemTypeName"
+        ></app-input-field>
+      </div>
+      <!-- Dropdown for 'Status' with options bound to 'status' array -->
+      <div class="flex flex-col w-full">
+        <app-dropdown
+          label="Status"
+          [options]="status"
+          [formGroup]="createsystemType"
+          controlName="status"
+        ></app-dropdown>
+      </div>
+      <!-- Input field for 'Description', optional field for the system type -->
+      <div class="flex flex-col w-full md:col-span-2">
+        <app-input-field
+          label="Description"
+          placeHolder="Enter a description (optional)"
+          class="w-full"
+          [formGroup]="createsystemType"
+          controlName="description"
+          [maxValue]='500'
+        ></app-input-field>
+      </div>
+      <!-- Section with buttons for 'Cancel' and 'Save' actions -->
+      <div class="flex flex-row md:col-span-3">
+        <div class="flex-1"></div>
+        <div class="items-center justify-end">
+          <!-- Cancel button, calls 'back()' method on click -->
+          <button
+            class="mat-raised-button-cancel mr-4 text-toolbarBg bg-text px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+            mat-raised-button
+            (click)="back()"
+          >
+            CANCEL
+          </button>
+          <!-- Save button, calls 'add(createsystemType)' method and is disabled based on 'saveButtonDisabled' -->
+          <button
+            class="mat-raised-button text-toolbarBg bg-text px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+            mat-raised-button
+            (click)="add(createsystemType)"
+            [disabled]="saveButtonDisabled"
+          >
+            SAVE
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

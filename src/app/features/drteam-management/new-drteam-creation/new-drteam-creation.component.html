@@ -1,0 +1,78 @@
+<div [class]="classValue" class="tablet:bg-lblue tablet:px-4">
+  <!-- Navigation bar component with dynamic page title and back button -->
+  <div class="flex justify-between">
+    <app-navigationbar
+      [pageTitle]="pageTitle"
+      [arrow]="backButton"
+    ></app-navigationbar>
+    <button mat-icon-button class="pt-8" mat-dialog-close *ngIf="!backButton">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div [class]="insideDivStyle">
+    <form
+      [formGroup]="createDRTeam"
+      (ngSubmit)="add($event)"
+      class="w-full mt-4 grid grid-cols-1 tablet:grid-cols-2 md:grid-cols-2 gap-4 mobileLandscape:grid-cols-2"
+    >
+      <!-- DR Team Name Input -->
+      <div class="flex flex-col w-full">
+        <app-input-field
+          label="DR Team Name"
+          placeHolder="Text"
+          class="w-full"
+          [formGroup]="createDRTeam"
+          controlName="drTeamName"
+          [minValue]="5"
+          [maxValue]="20"
+          patternErrorMessage="DR Team must be alphanumeric and can include underscores and spaces"
+        ></app-input-field>
+      </div>
+      <!-- Status Dropdown -->
+      <div class="flex flex-col w-full">
+        <app-dropdown
+          label="Status"
+          [options]="status"
+          [formGroup]="createDRTeam"
+          controlName="status"
+        ></app-dropdown>
+      </div>
+      <!-- Description Input (Optional) -->
+      <div
+        class="flex flex-col w-full md:col-span-2 tablet:col-span-2 mobileLandscape:col-span-2"
+      >
+        <app-input-field
+          label="Description"
+          placeHolder="Enter a description (optional)"
+          class="w-full"
+          [formGroup]="createDRTeam"
+          controlName="description"
+          [maxValue]="500"
+        ></app-input-field>
+      </div>
+
+      <!-- Buttons for Cancel and Save -->
+      <div class="flex flex-row md:col-span-3 mobileLandscape:col-span-3">
+        <div class="flex-1"></div>
+        <div class="items-center justify-end">
+          <button
+            class="mat-raised-button-cancel mr-4 text-toolbarBg bg-text px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+            mat-raised-button
+            (click)="back()"
+          >
+            CANCEL
+          </button>
+          <button
+            class="mat-raised-button text-toolbarBg bg-text px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+            mat-raised-button
+            (click)="add(createDRTeam)"
+            [disabled]="saveButtonDisabled"
+          >
+            SAVE
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

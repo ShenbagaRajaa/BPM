@@ -1,0 +1,8 @@
+@media (max-width: 1024px) {
+  .scroll-container {
+    height: 100vh;
+    overflow-y: auto;
+    padding-bottom: 4rem !important;
+    margin-bottom: 4rem !important;
+  }
+}

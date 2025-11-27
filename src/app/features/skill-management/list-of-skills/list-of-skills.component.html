@@ -1,0 +1,107 @@
+<div class="md:p-4 pb-16 h-screen flex flex-col tablet:bg-lblue tablet:px-4">
+  <app-navigationbar
+    pageTitle="DR Skills Management"
+    [arrow]="false"
+    [button]="hasPermissionToCreate"
+    buttonLabel="ADD NEW DR SKILL"
+    (activeValue)="createOrUpdateSkill()"
+  ></app-navigationbar>
+
+  <div
+    class="w-full bg-white shadow-lg p-4 pb-32 flex-grow md:flex tablet:flex hidden md:pb-16"
+  >
+    <div class="p-4 w-full">
+      <h4 class="text-xl mb-4">DR Skills List</h4>
+      <div class="rounded-lg border p-4">
+        <div class="w-full tablet:w-1/3 md:w-1/3">
+          <app-input-field
+            label="Search"
+            placeHolder="Search by DR Skill Name"
+            (activeValue)="externalFilterChanged($event)"
+          ></app-input-field>
+        </div>
+
+        <div class="mt-6">
+          <ag-grid-angular
+            [rowData]="rowData"
+            [columnDefs]="displayedColumns"
+            class="ag-theme-quartz"
+            [domLayout]="'autoHeight'"
+            [pagination]="pagination"
+            [rowHeight]="50"
+            [paginationPageSize]="paginationPageSize"
+            [paginationPageSizeSelector]="paginationPageSizeSelector"
+            overlayNoRowsTemplate="<div style='position: absolute; top: 60px; left: 50%; transform: translateX(-50%); font-size: 16px; font-weight: bold; color: #555;'>
+            No DR Skills found matching your criteria.
+          </div>"
+          ></ag-grid-angular>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block md:hidden tablet:hidden">
+    <!-- Search Field -->
+    <div class="w-full px-4">
+      <app-input-field
+        label="Search"
+        placeHolder="Search by DR Skill Name"
+        class="w-full"
+        (activeValue)="externalFilterChanged($event)"
+      ></app-input-field>
+    </div>
+
+    <!-- Skill List Container -->
+    <div
+      class="mt-4 bg-mCard min-h-[650px] p-4 pb-64 rounded-t-3xl border pt-12"
+    >
+      <h4 class="text-xl font-semibold mb-4">DR Skills List</h4>
+
+      <!-- Skill Cards -->
+      <ng-container *ngIf="rowData.length; else noDataTemplate">
+        <div
+          class="w-full bg-gray-100 p-4 rounded-lg mb-4 shadow-md"
+          *ngFor="let skill of rowData"
+        >
+          <div class="flex justify-between items-center">
+            <!-- Skill Name -->
+            <h5
+              class="text-lg font-medium text-text"
+              (click)="openDRSkillsDetails(skill)"
+            >
+              {{ skill.skillName }}
+            </h5>
+
+            <!-- Action Menu -->
+            <mat-icon [matMenuTriggerFor]="menu">more_vert</mat-icon>
+            <mat-menu #menu="matMenu" yPosition="above">
+              <button mat-menu-item (click)="createOrUpdateSkill(skill)">
+                <mat-icon class="stroke-current stroke-1 mr-2">edit</mat-icon>
+                Edit
+              </button>
+              <button mat-menu-item (click)="confirmDelete(skill.id)">
+                <mat-icon class="stroke-current stroke-1 mr-2"
+                  >delete_forever</mat-icon
+                >
+                Delete
+              </button>
+            </mat-menu>
+          </div>
+          <!-- Skill Team Name -->
+          <p class="text-sm">{{ skill.drTeamName }}</p>
+          <!-- Skill Status -->
+          <p class="text-sm text-gray-500">
+            {{ skill.status ? "Active" : "Inactive" }}
+          </p>
+        </div>
+      </ng-container>
+
+      <!-- No Data Template -->
+      <ng-template #noDataTemplate>
+        <div class="text-center text-gray-500 mt-6">
+          No DR Skills found matching your criteria.
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

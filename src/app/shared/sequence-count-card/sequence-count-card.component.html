@@ -1,0 +1,72 @@
+<div class="w-full bg-white rounded-lg shadow-lg border p-2 md:p-4">
+  <!-- First row: Plan Identifier -->
+  <div
+    class="flex flex-col tablet:flex-row md:flex-row justify-between mb-2 items-center"
+  >
+    <div
+      class="w-full md:w-1/2 text-sm text-text md:text-md items-center break-words"
+    >
+      <span class="text-gray-600">Plan Name :</span>
+      <span class="font-bold">
+        {{ planName }}
+      </span>
+    </div>
+
+    <div
+      class="w-full md:w-1/2 flex justify-end text-xs md:text-lg hidden tablet:flex md:flex"
+    >
+      <app-status-highlighter [status]="planStatus"></app-status-highlighter>
+    </div>
+  </div>
+  <!-- Second row: Plan Description and Status Highlighter (conditionally displayed) -->
+  <div
+    class="flex flex-col tablet:flex-row md:flex-row justify-between mb-2 items-center"
+  >
+    <div
+      class="w-full md:w-1/2 flex justify-end text-xs md:text-lg md:hidden tablet:hidden"
+    >
+      <app-status-highlighter [status]="planStatus"></app-status-highlighter>
+    </div>
+    <div class="w-full md:w-full flex flex-col tablet:flex-row md:flex-row mobile:items-start items-center md:flex">
+     <span class="text-gray-600">Plan Description :</span>
+      <span class="font-bold">
+        {{ planDescription }}
+      </span>
+    </div>
+  </div>
+
+  <!-- Fourth row: Plan Type and Plan Level -->
+  <div
+    class="flex flex-col tablet:flex-row md:flex-row justify-between mb-2 items-center"
+  >
+    <div class="w-full md:w-1/2  flex items-center md:flex flex-col tablet:flex-row md:flex-row mobile:items-start">
+      <span class="text-gray-600">Plan Type :</span>
+      <span class="font-bold">
+        {{ planType }}
+      </span>
+    </div>
+    <div class="w-full md:w-1/2 flex items-center md:flex flex-col tablet:flex-row md:flex-row mobile:items-start">
+      <span class="text-gray-600">Plan Level :</span>
+      <span class="font-bold">
+        {{ planLevel }}
+      </span>
+    </div>
+  </div>
+
+  <div
+    class="flex flex-col tablet:flex-row md:flex-row justify-between mb-2 items-center"
+  >
+    <div class="w-full md:w-1/2  flex items-center md:flex flex-col tablet:flex-row md:flex-row mobile:items-start">
+      <span class="text-gray-600">Plan Creation Date :</span>
+      <span class="font-bold">
+        {{ planCreationDate | date : "short" }}
+      </span>
+    </div>
+    <div class="w-full md:w-1/2 flex items-center md:flex flex-col tablet:flex-row md:flex-row mobile:items-start">
+      <span class="text-gray-600">PlanName :</span>
+      <span class="font-bold">
+        {{ lastChangedDate | date : "short" }}
+      </span>
+    </div>
+  </div>
+</div>

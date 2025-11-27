@@ -1,0 +1,20 @@
+<div
+  class="flex flex-col items-center pt-20 mobileLandscape:pt-4 h-screen border p-4 bg-mBgBlue tablet:bg-lblue md:bg-lblue"
+>
+  <mat-card class="w-full max-w-lg p-6 text-center shadow-lg">
+    <div class="mt-4 text-3xl font-semibold text-gray-800">
+      <mat-icon class="text-red-600 mt-2">block</mat-icon> Access Denied
+    </div>
+    <p class="mt-2 text-gray-600">Page Not Found.</p>
+
+    <div class="mt-6">
+      <button
+        mat-raised-button
+        class="mat-raised-button text-toolbarBg bg-text px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+        (click)="goBack()"
+      >
+        <mat-icon>arrow_back</mat-icon> Go to login
+      </button>
+    </div>
+  </mat-card>
+</div>

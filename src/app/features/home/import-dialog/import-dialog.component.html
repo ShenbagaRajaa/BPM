@@ -1,0 +1,60 @@
+<div class="p-4 bg-lblue">
+  <div class="flex justify-between">
+    <app-navigationbar pageTitle="Import Excel" [arrow]="false"></app-navigationbar>
+    <button mat-icon-button mat-dialog-close class="text-text">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="bg-white shadow-lg p-4">
+    <mat-dialog-content>
+      <div class="w-full">
+        <div 
+          class="border-2 p-2 border-dashed rounded-lg min-h-[50px] bg-gray-50 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 hover:border-text hover:bg-gray-100 relative"
+          [class.bg-blue-100]="isDragOver"
+          [class.border-blue-500]="isDragOver"
+          (click)="triggerFileInput()" 
+          (dragover)="onDragOver($event)" 
+          (dragleave)="onDragLeave($event)" 
+          (drop)="onDrop($event)"
+        >
+          <div class="flex items-center gap-2 text-text">
+            <mat-icon class="text-lg">cloud_upload</mat-icon>
+            <span class="text-sm font-medium">Upload File</span>
+          </div>
+
+          <div class="pt-2 w-full flex flex-col gap-2" *ngIf="form.get('file')?.value">
+            <div class="flex items-center gap-3 p-2 bg-white border border-gray-200 rounded">
+              <mat-icon class="text-gray-600 text-lg">attach_file</mat-icon>
+              <span class="flex-1 text-sm text-gray-800 truncate">{{ fileControl.value.name }}</span>
+            </div>
+          </div>
+        </div>
+        <input #fileInput type="file" (change)="onFileSelected($event)" accept=".xls,.xlsx,.xlsm" class="hidden" />
+      </div>
+
+      <div class="border-2 border-gray-300 rounded-lg p-4 mt-4" *ngIf="errors.length">
+        <div class="flex items-center text-red-600 font-bold mb-2 gap-2">
+          <i class="material-icons">warning_amber</i>
+          <span>The following errors were found in the uploaded file:</span>
+        </div>
+        <ul *ngIf="errors.length" class="list-disc list-inside text-red-600 ml-4">
+          <li *ngFor="let err of errors">{{ err }}</li>
+        </ul>
+      </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+      <div class="flex justify-end gap-4">
+        <button type="reset" mat-raised-button mat-dialog-close
+          class="px-4 py-2 rounded-md bg-lblue text-text disabled:opacity-50 disabled:cursor-not-allowed">
+          CANCEL
+        </button>
+        <button mat-raised-button (click)="submit()" [disabled]="saveButtonDisabled"
+          class="px-4 py-2 rounded-md bg-text text-white disabled:opacity-50 disabled:cursor-not-allowed">
+          UPLOAD
+        </button>
+      </div>
+    </mat-dialog-actions>
+  </form>
+</div>

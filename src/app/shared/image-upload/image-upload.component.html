@@ -1,0 +1,48 @@
+<div class="flex flex-col items-left space-y-4" [formGroup]="formGroup">
+  <div>{{ label }}</div>
+  <div class="flex flex-row">
+    <div class="flex w-16 h-16 mr-4">
+      <img
+        [src]="imagePreview || 'assets/sample-image.jpg'"
+        alt="Image Preview"
+        class="w-full h-full rounded-full object-cover border border-gray-300"
+      />
+      <!-- Displays the image preview, falls back to a default sample image if none is provided -->
+      <!-- Image is styled to be circular with a border and cover the available space -->
+    </div>
+
+    <div class="flex space-x-2 items-center text-text">
+      <button mat-raised-button color="primary" (click)="triggerImageUpload()">
+        Add
+      </button>
+      <!-- Button to trigger image upload, styled with Angular Material's raised button and primary color -->
+      <!-- On click, triggers the 'triggerImageUpload()' method -->
+      <mat-divider vertical="true" class="h-4"></mat-divider>
+      <button
+        mat-raised-button
+        color="warn"
+        (click)="removeImage()"
+        [disabled]="!imagePreview"
+      >
+        Remove
+      </button>
+      <!-- Button to remove the selected image, styled with a "warn" color (typically red) -->
+      <!-- The button is disabled if there is no image preview available -->
+    </div>
+  </div>
+
+  <mat-error *ngIf="fileError">{{ fileError }}</mat-error>
+  <!-- Displays any error message if 'fileError' exists (for example, invalid file type or size) -->
+  <input
+    type="file"
+    accept="image/*"
+    class="hidden"
+    [formControlName]="controlName"
+    (change)="onImageSelected($event)"
+    #imageInput
+  />
+
+  <!-- Hidden file input that accepts image files -->
+  <!-- It binds to the form control specified by 'controlName' and triggers 'onImageSelected()' when a file is chosen -->
+  <!-- This input is visually hidden, but triggered by the "Add" button for image selection -->
+</div>

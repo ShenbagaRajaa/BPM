@@ -1,0 +1,48 @@
+@media screen and (max-width: 768px) {
+  .ag-theme-alpine {
+    font-size: 11px;
+  }
+
+  .task-table-container {
+    overflow-x: auto;
+  }
+}
+
+.full-screen-mobile-dialog {
+  @media screen and (orientation: landscape) {
+    .mat-dialog-container {
+      padding: 0;
+      max-height: 100vh !important;
+      height: 100vh !important;
+      overflow-y: auto !important;
+    }
+  }
+}
+
+@supports (-webkit-touch-callout: none) {
+  .mat-dialog-container {
+    height: -webkit-fill-available !important;
+  }
+}
+
+/* .ag-theme-quartz {
+    height: auto !important; 
+  }
+  
+  .flex-grow {
+    flex-grow: 1; 
+  }
+  
+  body {
+    overflow-y: auto; 
+  }
+  
+  .container {
+    overflow: visible !important; 
+  }
+  
+  .ag-row {
+    min-height: 40px; 
+  }
+  
+   */

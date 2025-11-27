@@ -1,0 +1,464 @@
+<div *ngIf="showHeader">
+  <!-- Toolbar component with a toggle drawer action -->
+  <app-toolbar
+    class="relative md:fixed md:top-0 left-0 right-0 z-50"
+    (toogleDrawer)="toggleDrawerAction($event)"
+  ></app-toolbar>
+</div>
+
+<mat-drawer-container class="w-full">
+  <!-- Sidebar Drawer with various links -->
+  <mat-drawer
+    #drawer
+    class="p-2 pt-20 w-60 bg-gray-800 text-gray-300 mobileLandscape:hidden fixed hidden md:flex overflow-y-auto tablet:flex"
+    mode="side"
+    opened
+  >
+    <div class="pt-10 text-lg">
+      <!-- Dashboard link with permission check -->
+      <div class="tab mb-1" *ngIf="hasPermissionToDashboard">
+        <a
+          [routerLink]="['/home/dashboard']"
+          routerLinkActive="router-link-active"
+          class="flex items-center hover:text-white hover:stroke-white tablet-icon-nav"
+          [routerLinkActiveOptions]="{ exact: false }"
+          [ngClass]="{
+            'text-white stroke-white bg-gray-700': isActive('/home/dashboard'),
+            'text-gray-300': !isActive('/home/dashboard')
+          }"
+        >
+          <mat-icon class="stroke-current stroke-1 mr-2">dashboard</mat-icon>
+
+          <span class="nav-text"> Dashboard</span>
+        </a>
+      </div>
+      <!-- Home link -->
+      <div class="tab mb-1">
+        <a
+          [routerLink]="['/home/plans']"
+          routerLinkActive="router-link-active"
+          class="flex items-center hover:text-white hover:stroke-white tablet-icon-nav"
+          [routerLinkActiveOptions]="{ exact: false }"
+          [ngClass]="{
+            'text-white stroke-white bg-gray-700': isActive('/home/plans'),
+            'text-gray-300': !isActive('/home/plans')
+          }"
+        >
+          <mat-icon class="stroke-current stroke-1 mr-2">home</mat-icon>
+          <span class="nav-text">Plans</span>
+        </a>
+      </div>
+      <!-- Build BR Plan link with permission check and expandable list of identifiers -->
+      <div class="tab mb-1" *ngIf="hasPermissionToBuildBRPlan">
+        <a
+          [routerLink]="['/home/buildBRPlan']"
+          routerLinkActive="router-link-active"
+          [routerLinkActiveOptions]="{ exact: false }"
+          (click)="togglePlanIdentifiers()"
+          class="flex items-center hover:text-white hover:stroke-white cursor-pointer tablet-icon-nav"
+          [ngClass]="{
+            'text-white stroke-white bg-gray-700':
+              isActive('/home/buildBRPlan'),
+            'text-gray-300': !isActive('/home/buildBRPlan')
+          }"
+        >
+          <mat-icon class="stroke-current stroke-1 mr-2">build_circle</mat-icon>
+          <span class="nav-text"> Build Plan</span>
+        </a>
+      </div>
+      <!-- Other navigation links with permission checks for different sections -->
+      <div class="tab mb-1" *ngIf="hasPermissionToTestBRPlan">
+        <a
+          [routerLink]="['/home/testBRPlan']"
+          routerLinkActive="router-link-active"
+          [routerLinkActiveOptions]="{ exact: false }"
+          class="flex items-center hover:text-white hover:stroke-white tablet-icon-nav"
+          [ngClass]="{
+            'text-white stroke-white bg-gray-700': isActive('/home/testBRPlan'),
+            'text-gray-300': !isActive('/home/testBRPlan')
+          }"
+        >
+          <mat-icon class="stroke-current stroke-1 mr-2">science</mat-icon>
+          <span class="nav-text"> Test Plan</span>
+        </a>
+      </div>
+      <!-- Execute BR Plan link -->
+      <div class="tab mb-1" *ngIf="hasPermissionToExecuteBRPlan">
+        <a
+          [routerLink]="['/home/executeBRPlan']"
+          routerLinkActive="router-link-active"
+          [routerLinkActiveOptions]="{ exact: false }"
+          class="flex items-center hover:text-white hover:stroke-white tablet-icon-nav"
+          [ngClass]="{
+            'text-white stroke-white bg-gray-700': isActive(
+              '/home/executeBRPlan'
+            ),
+            'text-gray-300': !isActive('/home/executeBRPlan')
+          }"
+        >
+          <mat-icon class="stroke-current stroke-1 mr-2">play_circle</mat-icon>
+
+          <span class="nav-text"> Execute Plan</span>
+        </a>
+      </div>
+      <!-- Admin section with sub-menu options -->
+      <div class="tab mb-1">
+        <a
+          *ngIf="hasPermissionToSystemManagement"
+          (click)="handleAdminClick($event)"
+          class="flex items-center hover:text-white hover:stroke-white tablet-icon-nav cursor-pointer"
+        >
+          <mat-icon class="stroke-current stroke-1 mr-2"
+            >manage_accounts</mat-icon
+          >
+          <span class="nav-text flex">
+            Admin
+            <mat-icon class="md:hidden tablet:block">
+              {{
+                showAdminSubMenu
+                  ? "keyboard_arrow_down"
+                  : "keyboard_arrow_right"
+              }}
+            </mat-icon></span
+          >
+
+          <mat-icon class="ml-auto md:block tablet:hidden">
+            {{ showAdminSubMenu ? "expand_less" : "expand_more" }}
+          </mat-icon>
+        </a>
+
+        <div
+          *ngIf="showAdminSubMenu"
+          class="ml-4 mt-1 tablet:hidden mobileLandscape:hidden md:block"
+        >
+          <div class="tab mb-1">
+            <a
+              *ngIf="hasPermissionToUserManagement"
+              [routerLink]="['/home/userManagement']"
+              routerLinkActive="router-link-active"
+              class="flex items-center hover:text-white hover:stroke-white tablet-icon-nav"
+              [ngClass]="{
+                'text-white stroke-white bg-gray-700': isActive(
+                  '/home/userManagement'
+                ),
+                'text-gray-300': !isActive('/home/userManagement')
+              }"
+            >
+              <mat-icon class="stroke-current stroke-1 mr-2 overflow-visible"
+                >group</mat-icon
+              >
+
+              <span class="nav-text"> User Management</span>
+            </a>
+          </div>
+
+          <div class="tab mb-1">
+            <a
+              *ngIf="hasPermissionToDefaultSettings"
+              [routerLink]="['/home/defaultConfigurations']"
+              routerLinkActive="router-link-active"
+              class="flex items-center hover:text-white hover:stroke-white tablet-icon-nav"
+              [ngClass]="{
+                'text-white stroke-white bg-gray-700': isActive(
+                  '/home/defaultConfigurations'
+                ),
+                'text-gray-300': !isActive('/home/defaultConfigurations')
+              }"
+            >
+              <mat-icon class="stroke-current stroke-1 mr-2 overflow-visible"
+                >settings</mat-icon
+              >
+
+              <span class="nav-text"> Default Settings</span>
+            </a>
+          </div>
+          <div class="tab mb-1">
+            <a
+              *ngIf="hasPermissionToDepartmentManagement"
+              [routerLink]="['/home/departmentManagement']"
+              routerLinkActive="router-link-active"
+              class="flex items-center hover:text-white hover:stroke-white tablet-icon-nav"
+              [ngClass]="{
+                'text-white stroke-white bg-gray-700': isActive(
+                  '/home/departmentManagement'
+                ),
+                'text-gray-300': !isActive('/home/departmentManagement')
+              }"
+            >
+              <mat-icon class="stroke-current stroke-1 mr-2 overflow-visible"
+                >business</mat-icon
+              >
+
+              <span class="nav-text"> Department Management</span>
+            </a>
+          </div>
+          <div class="tab mb-1">
+            <a
+              *ngIf="hasPermissionToDRSkillManagement"
+              [routerLink]="['/home/skillManagement']"
+              routerLinkActive="router-link-active"
+              class="flex items-center hover:text-white hover:stroke-white tablet-icon-nav"
+              [ngClass]="{
+                'text-white stroke-white bg-gray-700': isActive(
+                  '/home/skillManagement'
+                ),
+                'text-gray-300': !isActive('/home/skillManagement')
+              }"
+            >
+              <mat-icon class="stroke-current stroke-1 mr-2 overflow-visible"
+                >equalizer</mat-icon
+              >
+
+              <span class="nav-text"> DR Skills Management</span>
+            </a>
+          </div>
+          <div class="tab mb-1">
+            <a
+              *ngIf="hasPermissionToDRTeamManagement"
+              [routerLink]="['/home/drTeamManagement']"
+              routerLinkActive="router-link-active"
+              class="flex items-center hover:text-white hover:stroke-white tablet-icon-nav"
+              [ngClass]="{
+                'text-white stroke-white bg-gray-700': isActive(
+                  '/home/drTeamManagement'
+                ),
+                'text-gray-300': !isActive('/home/drTeamManagement')
+              }"
+            >
+              <mat-icon class="stroke-current stroke-1 mr-2 overflow-visible"
+                >filter_vintage</mat-icon
+              >
+
+              <span class="nav-text"> DR Team Management</span>
+            </a>
+          </div>
+          <div class="tab mb-1">
+            <a
+              *ngIf="hasPermissionToPlanLevelManagement"
+              [routerLink]="['/home/planLevelManagement']"
+              routerLinkActive="router-link-active"
+              class="flex items-center hover:text-white hover:stroke-white tablet-icon-nav"
+              [ngClass]="{
+                'text-white stroke-white bg-gray-700': isActive(
+                  '/home/planLevelManagement'
+                ),
+                'text-gray-300': !isActive('/home/planLevelManagement')
+              }"
+            >
+              <mat-icon class="stroke-current stroke-1 mr-2 overflow-visible"
+                >category</mat-icon
+              >
+
+              <span class="nav-text"> Plan Level Management</span>
+            </a>
+          </div>
+          <div class="tab mb-1">
+            <a
+              *ngIf="hasPermissionToPlanTypeManagement"
+              [routerLink]="['/home/planTypeManagement']"
+              routerLinkActive="router-link-active"
+              class="flex items-center hover:text-white hover:stroke-white tablet-icon-nav"
+              [ngClass]="{
+                'text-white stroke-white bg-gray-700': isActive(
+                  '/home/planTypeManagement'
+                ),
+                'text-gray-300': !isActive('/home/planTypeManagement')
+              }"
+            >
+              <mat-icon class="stroke-current stroke-1 mr-2 overflow-visible"
+                >view_list</mat-icon
+              >
+
+              <span class="nav-text"> Plan Type Management</span>
+            </a>
+          </div>
+          <div class="tab mb-1">
+            <a
+              *ngIf="hasPermissionToRoleManagement"
+              [routerLink]="['/home/roleManagement']"
+              routerLinkActive="router-link-active"
+              class="flex items-center hover:text-white hover:stroke-white tablet-icon-nav"
+              [ngClass]="{
+                'text-white stroke-white bg-gray-700': isActive(
+                  '/home/roleManagement'
+                ),
+                'text-gray-300': !isActive('/home/roleManagement')
+              }"
+            >
+              <mat-icon class="stroke-current stroke-1 mr-2 overflow-visible"
+                >recent_actors</mat-icon
+              >
+
+              <span class="nav-text"> Role Management</span>
+            </a>
+          </div>
+          <div class="tab mb-1">
+            <a
+              *ngIf="hasPermissionToSiteManagement"
+              [routerLink]="['/home/siteManagement']"
+              routerLinkActive="router-link-active"
+              class="flex items-center hover:text-white hover:stroke-white tablet-icon-nav"
+              [ngClass]="{
+                'text-white stroke-white bg-gray-700': isActive(
+                  '/home/siteManagement'
+                ),
+                'text-gray-300': !isActive('/home/siteManagement')
+              }"
+            >
+              <mat-icon class="stroke-current stroke-1 mr-2 overflow-visible"
+                >location_on</mat-icon
+              >
+
+              <span class="nav-text"> Site Management</span>
+            </a>
+          </div>
+          <div class="tab mb-1">
+            <a
+              *ngIf="hasPermissionToSystemManagement"
+              [routerLink]="['/home/systemManagement']"
+              routerLinkActive="router-link-active"
+              class="flex items-center hover:text-white hover:stroke-white tablet-icon-nav"
+              [ngClass]="{
+                'text-white stroke-white bg-gray-700': isActive(
+                  '/home/systemManagement'
+                ),
+                'text-gray-300': !isActive('/home/systemManagement')
+              }"
+            >
+              <mat-icon class="stroke-current stroke-1 mr-2 overflow-visible"
+                >settings_applications</mat-icon
+              >
+
+              <span class="nav-text"> System Management</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-drawer>
+  <!-- Main content area with router outlet for displaying pages -->
+  <div
+    class="w-[100%] bg-mBg md:bg-lblue bg-cover md:pt-16 pb-12 md:pb-0 mobile:overflow-x-hidden"
+  >
+    <router-outlet></router-outlet>
+  </div>
+  <!-- Bottom mobile navigation bar -->
+  <div
+    class="tablet:hidden md:hidden mobileLandscape:fixed fixed bottom-0 left-0 right-0 z-50 bg-white shadow-lg"
+    style="padding: 0.5rem 0.75rem"
+  >
+    <div class="grid grid-cols-6 gap-2 text-center px-4">
+      <div
+        class="tab flex flex-col items-center"
+        *ngIf="hasPermissionToDashboard"
+      >
+        <a
+          [routerLink]="['/home/dashboard']"
+          routerLinkActive="router-link-active"
+          class="flex flex-col items-center hover:stroke-text"
+          #rlaDashboard="routerLinkActive"
+          [ngClass]="{
+            'text-text stroke-text': rlaDashboard.isActive,
+            'text-gray-400': !rlaDashboard.isActive
+          }"
+        >
+          <mat-icon class="stroke-current stroke-1">dashboard</mat-icon>
+          <div class="text-xs truncate w-full">Dashboard</div>
+        </a>
+      </div>
+
+      <div class="tab flex flex-col items-center">
+        <a
+          [routerLink]="['/home/plans']"
+          routerLinkActive="router-link-active"
+          class="flex flex-col items-center hover:stroke-text"
+          #rlaHome="routerLinkActive"
+          [ngClass]="{
+            'text-text stroke-text': rlaHome.isActive,
+            'text-gray-400': !rlaHome.isActive
+          }"
+        >
+          <mat-icon class="stroke-current stroke-1">home</mat-icon>
+
+          <div class="text-xs truncate w-full text-center">Plans</div>
+        </a>
+      </div>
+
+      <div
+        class="tab flex flex-col items-center"
+        *ngIf="hasPermissionToBuildBRPlan"
+      >
+        <a
+          [routerLink]="['/home/buildBRPlan']"
+          routerLinkActive="router-link-active"
+          class="flex flex-col items-center hover:stroke-text"
+          #rlaBuild="routerLinkActive"
+          [ngClass]="{
+            'text-text stroke-text': rlaBuild.isActive,
+            'text-gray-400': !rlaBuild.isActive
+          }"
+        >
+          <mat-icon class="stroke-current stroke-1">build_circle</mat-icon>
+          <div class="text-xs w-full truncate text-center">Build</div>
+        </a>
+      </div>
+
+      <div
+        class="tab flex flex-col items-center"
+        *ngIf="hasPermissionToTestBRPlan"
+      >
+        <a
+          [routerLink]="['/home/testBRPlan']"
+          routerLinkActive="router-link-active"
+          class="flex flex-col items-center hover:stroke-text"
+          #rlaTest="routerLinkActive"
+          [ngClass]="{
+            'text-text stroke-text': rlaTest.isActive,
+            'text-gray-400': !rlaTest.isActive
+          }"
+        >
+          <mat-icon class="stroke-current stroke-1">play_circle</mat-icon>
+          <div class="text-xs truncate w-full text-center">Test</div>
+        </a>
+      </div>
+
+      <div
+        class="tab flex flex-col items-center"
+        *ngIf="hasPermissionToExecuteBRPlan"
+      >
+        <a
+          [routerLink]="['/home/executeBRPlan']"
+          routerLinkActive="router-link-active"
+          class="flex flex-col items-center hover:stroke-text"
+          #rlaExecute="routerLinkActive"
+          [ngClass]="{
+            'text-text stroke-text': rlaExecute.isActive,
+            'text-gray-400': !rlaExecute.isActive
+          }"
+        >
+          <mat-icon class="stroke-current stroke-1">settings</mat-icon>
+          <div class="text-xs truncate w-full">Execute</div>
+        </a>
+      </div>
+
+      <div
+        class="tab flex flex-col items-center"
+        *ngIf="hasPermissionToSystemManagement"
+      >
+        <a
+          class="flex flex-col items-center hover:stroke-text"
+          routerLinkActive="router-link-active"
+          (click)="handleAdminClick($event)"
+          #rlaAdmin="routerLinkActive"
+          [ngClass]="{
+            'text-text stroke-text': rlaAdmin.isActive,
+            'text-gray-400': !rlaAdmin.isActive
+          }"
+        >
+          <mat-icon class="stroke-current stroke-1">manage_accounts</mat-icon>
+          <div class="text-xs truncate w-full text-center">Admin</div>
+        </a>
+      </div>
+    </div>
+  </div>
+</mat-drawer-container>

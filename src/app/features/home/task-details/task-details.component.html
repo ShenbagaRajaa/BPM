@@ -1,0 +1,107 @@
+<div
+  class="md:p-4 tablet:p-4 h-screen flex flex-col bg-mBgBlue tablet:bg-lblue md:bg-lblue"
+>
+  <!-- Navigation bar with title for the task details page -->
+  <app-navigationbar pageTitle="Task Details"></app-navigationbar>
+  <div
+    class="w-full bg-mBgBlue tablet:bg-white md:bg-white shadow-lg pb-56 px-2 tablet:p-4 md:p-4"
+  >
+    <div
+      class="w-full flex-col bg-white p-4 border rounded-lg mb-4 shadow-md flex"
+    >
+      <div class="w-full flex flex-col tablet:flex-row md:flex-row">
+        <div class="w-2/3 text-left mt-2">
+          <span class="text-lg text-text md:text-lg font-bold"
+            >Task Title : {{ taskDetails.taskTitle }}</span
+          >
+        </div>
+        <div class="w-3/3 text-right justify-end mt-2 text-sm">
+          <app-status-highlighter
+            [status]="taskDetails.status"
+          ></app-status-highlighter>
+        </div>
+      </div>
+      <p class="text-sm text-justify">{{ taskDetails.taskDescription }}</p>
+      <hr />
+
+      <div
+        class="mt-4 grid grid-cols-1 tablet:grid-cols-2 md:grid-cols-3 gap-4"
+      >
+        <div
+          *ngIf="taskDetails.fileName"
+          class="flex flex-col"
+        >
+          <div class="font-bold">Attachment :</div>
+          <a
+            [href]="getFileUrl()"
+            target="_blank"
+            class="inline-flex items-center underline text-blue-600 hover:text-blue-800 gap-1"
+          >
+            {{ taskDetails.fileName }}
+          </a>
+        </div>
+        <!-- Primary team member name displayed in a flex column layout -->
+        <div class="flex flex-col">
+          <span class="font-bold">Primary Team Member:</span>
+          <span class="text-textSky">{{ primaryTeamMemberName }}</span>
+        </div>
+        <!-- Backup team member name displayed in a flex column layout -->
+        <div class="flex flex-col">
+          <span class="font-bold">Backup Team Member:</span>
+          <span class="text-textSky"> {{ backupTeamMemberName }}</span>
+        </div>
+        <!-- Task estimate (hours:minutes) displayed in a flex column layout -->
+        <div class="flex flex-col">
+          <span class="font-bold">Task Estimate (hours:minutes):</span>
+          <span class="text-textSky">{{ taskDetails.taskEstimates }}</span>
+        </div>
+        <!-- Actual response time displayed in a flex column layout -->
+        <div class="flex flex-col">
+          <span class="font-bold">Actual Response Time:</span>
+          <span class="text-textSky">{{
+            taskDetails.actualResponseTimeinMins
+          }}</span>
+        </div>
+        <!-- Actual time to completion displayed in a flex column layout -->
+        <div class="flex flex-col">
+          <span class="font-bold">Actual Time to Completion:</span>
+          <span class="text-textSky">{{
+            taskDetails.actualTimetoCompletioninMins
+          }}</span>
+        </div>
+        <!-- Acknowledged by person displayed in a flex column layout -->
+        <div class="flex flex-col">
+          <span class="font-bold">Acknowledged By:</span>
+          <span class="text-textSky">{{ taskDetails.acknowledgedBy }}</span>
+        </div>
+        <!-- Acknowledged date/time displayed in a flex column layout -->
+        <div class="flex flex-col">
+          <span class="font-bold">Acknowledged Date/Time:</span>
+          <span class="text-textSky">{{ taskDetails.acknowledgedDate }}</span>
+        </div>
+        <!-- Completed by person displayed in a flex column layout -->
+        <div class="flex flex-col">
+          <span class="font-bold">Completed By:</span>
+          <span class="text-textSky">{{ completedByName }}</span>
+        </div>
+        <!-- Completed date/time displayed in a flex column layout -->
+        <div class="flex flex-col">
+          <span class="font-bold">Completed Date/Time:</span>
+          <span class="text-textSky">{{ taskDetails.completedDate }}</span>
+        </div>
+        <!-- Reported problem by person displayed in a flex column layout -->
+        <div class="flex flex-col">
+          <span class="font-bold">Reported Problem By:</span>
+          <span class="text-textSky"> {{ reportedProblemByName }}</span>
+        </div>
+        <!-- Problem reported date/time displayed in a flex column layout -->
+        <div class="flex flex-col">
+          <span class="font-bold">Problem Reported Date/Time:</span>
+          <span class="text-textSky">{{
+            taskDetails.problemReportedDate
+          }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

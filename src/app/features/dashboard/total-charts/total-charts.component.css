@@ -1,0 +1,49 @@
+#chart .apexcharts-legend-series {
+  display: flex !important;
+  align-items: center;
+  margin: 2px 0 !important;
+  white-space: nowrap;
+}
+
+#chart .apexcharts-canvas svg,
+#chart .apexcharts-canvas foreignObject {
+  height: 500px !important;
+}
+
+#chart,
+#chart .apexcharts-canvas {
+  min-height: 500px !important;
+  height: auto !important;
+}
+
+#chart .apexcharts-legend-text {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+#chart .apexcharts-legend {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 5px;
+  padding: 10px 0;
+  width: 100%;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+#chart .apexcharts-legend-text {
+  white-space: normal !important;
+  word-break: break-word !important;
+  line-height: 1.2rem;
+}
+@media (max-width: 600px) {
+  #chart .apexcharts-legend {
+    grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+    word-wrap: break-word;
+    gap: 3px;
+  }
+
+  #chart .apexcharts-legend-text {
+    font-size: 12px;
+  }
+}

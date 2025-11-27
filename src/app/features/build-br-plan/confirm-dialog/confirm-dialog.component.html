@@ -1,0 +1,45 @@
+<div class="p-4 bg-lblue">
+  <div class="flex justify-between">
+    <app-navigationbar
+      [pageTitle]="data.title"
+      [arrow]="false"
+    ></app-navigationbar>
+    <button
+      mat-icon-button
+      mat-dialog-close
+      class="text-text"
+      (click)="onCancel()"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="bg-white shadow-lg p-4">
+    <mat-dialog-content>
+      <div mat-dialog-content class="p-2 text-center">
+        <!-- Bind message dynamically with innerHTML for rich content -->
+        <p [innerHTML]="data.message"></p>
+      </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+      <div class="flex justify-end gap-4">
+        <button
+          type="reset"
+          mat-raised-button
+          mat-dialog-close
+          class="px-4 py-2 rounded-md bg-lblue text-text disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          CANCEL
+        </button>
+        <button
+          mat-raised-button
+          (click)="onConfirm()"
+          class="px-4 py-2 rounded-md bg-text text-white disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          YES, PROCEED
+        </button>
+      </div>
+    </mat-dialog-actions>
+  </div>
+</div>

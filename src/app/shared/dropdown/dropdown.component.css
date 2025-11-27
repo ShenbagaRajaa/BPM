@@ -1,0 +1,9 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.mdc-notched-outline__notch {
+  border-right: none !important;
+}

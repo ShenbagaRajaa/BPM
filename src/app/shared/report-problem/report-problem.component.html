@@ -1,0 +1,75 @@
+<div class="p-4 w-full bg-lblue">
+  <!-- Navigation bar component with a dynamic title and no back arrow -->
+  <div class="flex justify-between">
+    <app-navigationbar
+      pageTitle="Resolve Problem"
+      [arrow]="false"
+    ></app-navigationbar>
+    <button
+      mat-icon-button
+      mat-dialog-close
+      class="text-text"
+      (click)="cancel()"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div class="bg-white shadow-lg p-4">
+    <!-- Dialog Content -->
+    <mat-dialog-content class="p-0 m-0 space-y-6">
+      <form [formGroup]="reportProblemForm" class="w-full mt-4">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Report problem here</mat-label>
+          <!-- Textarea input for reporting the problem, bound to 'problemContent' form control -->
+          <textarea
+            matInput
+            formControlName="problemContent"
+            placeholder="Report here"
+            rows="4"
+          ></textarea>
+          <!-- Display an error message if the 'problemContent' field is required and hasn't been filled -->
+          <mat-error
+            *ngIf="
+              reportProblemForm.get('problemContent')?.hasError('required')
+            "
+          >
+            Report is required.
+          </mat-error>
+        </mat-form-field>
+        <!-- File upload section where the user can choose a file to upload -->
+        <div class="my-4">
+          <app-file-upload
+            label="Upload File"
+            [accept]="'.txt,.png,.jpeg,.jpg'"
+            [maxSize]="5"
+            (fileSelected)="onFileChange($event)"
+          ></app-file-upload>
+        </div>
+        <!-- Section for the cancel and submit buttons, using flexbox for layout -->
+        <div
+          class="flex flex-col md:flex-row justify-end space-y-2 md:space-y-0 md:space-x-4 mt-4"
+        >
+          <!-- CANCEL button that resets the form when clicked -->
+          <button
+            type="reset"
+            class="md:mr-4 lg:mr-4 tablet:mr-4 mat-raised-button-cancel text-toolbarBg bg-text px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+            mat-raised-button
+            (click)="cancel()"
+          >
+            CANCEL
+          </button>
+          <!-- SUBMIT button to report the problem -->
+          <button
+            class="mat-raised-button text-toolbarBg bg-text px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+            mat-raised-button
+            (click)="reportProblem()"
+            [disabled]="saveButtonDisabled"
+            type="submit"
+          >
+            {{ button }}
+          </button>
+        </div>
+      </form>
+    </mat-dialog-content>
+  </div>
+</div>

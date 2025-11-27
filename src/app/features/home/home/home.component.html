@@ -1,0 +1,152 @@
+<div
+  class="md:p-4 pt-6 tablet:py-0 h-screen md:flex tablet:flex flex-col hidden tablet:bg-lblue tablet:p-2"
+>
+  <!-- Navigation bar for larger screens -->
+  <app-navigationbar
+    class="hidden md:block tablet:block"
+    [arrow]="false"
+    pageTitle="Plans"
+  ></app-navigationbar>
+  <div class="w-full bg-white shadow-lg p-4 tablet:p-2 flex flex-grow md:pb-16">
+    <div class="p-4 tablet:p-2 w-full">
+      <h4 class="text-xl mb-4">Plans List</h4>
+      <div class="rounded-lg border p-4 tablet:p-2">
+        <div
+          class="flex flex-wrap items-center justify-between space-y-4 tablet:space-y-0 md:space-y-0"
+        >
+          <!-- Mobile search input field -->
+          <div class="w-full tablet:w-1/3 md:w-1/3">
+            <app-input-field
+              label="Search"
+              placeHolder="Search By Plan..."
+              (activeValue)="externalFilterChanged($event)"
+            >
+            </app-input-field>
+          </div>
+          <div
+            class="hidden tablet:flex md:flex w-full tablet:w-2/3 md:w-2/3 items-center justify-end space-x-4"
+          >
+            <button
+              *ngIf="hasPermissionToCreateBRPlan"
+              class="mat-raised-button mb-4 text-toolbarBg bg-text px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+              mat-raised-button
+              (click)="navigateAdd()"
+            >
+              NEW PLAN
+            </button>
+            <app-dropdown
+              class="w-[50%]"
+              label="Filter By Plan Status"
+              [options]="filterByPlanStatus"
+              blankMsg="plan status"
+              selectedValue="All"
+              (activeValue)="externalFilterChanged($event)"
+            ></app-dropdown>
+          </div>
+        </div>
+        <!-- ag-Grid displaying plan data -->
+        <div class="mt-2">
+          <div *ngIf="isBrowser">
+            <ag-grid-angular
+              [rowData]="rowData"
+              [columnDefs]="displayedColumns"
+              class="ag-theme-quartz"
+              #agGrid
+              [domLayout]="'autoHeight'"
+              [rowHeight]="50"
+              [pagination]="pagination"
+              [paginationPageSize]="paginationPageSize"
+              [paginationPageSizeSelector]="paginationPageSizeSelector"
+              overlayNoRowsTemplate="<div style='position: absolute; top: 60px; left: 50%; transform: translateX(-50%); font-size: 16px; font-weight: bold; color: #555;'>
+                No plans found matching your criteria.
+              </div>"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Mobile view for displaying plans -->
+<div class="block md:hidden tablet:hidden pt-16 h-screen">
+  <div class="w-full px-4">
+    <app-input-field
+      label="Search"
+      placeHolder="Search By Plan..."
+      class="w-full"
+      (activeValue)="externalFilterChanged($event)"
+    ></app-input-field>
+  </div>
+  <div class="mt-4 bg-mCard min-h-[650px] p-4 rounded-t-3xl border pt-12 pb-64">
+    <h4 class="text-xl font-semibold mb-4">Plans List</h4>
+    @if(rowData.length !== 0){ @for(data of rowData; track rowData){
+    <div class="w-full bg-gray-100 p-4 rounded-lg mb-4 shadow-md">
+      <div class="flex justify-between">
+        <h5 class="text-lg font-medium text-text" (click)="planDetails(data)">
+          {{ data.planName }}
+        </h5>
+        <mat-icon [matMenuTriggerFor]="aboveMenu">more_vert</mat-icon>
+        <mat-menu #aboveMenu="matMenu" yPosition="above">
+          <!-- Edit plan option -->
+          <button mat-menu-item (click)="navigateEdit(data)">
+            <mat-icon class="stroke-current stroke-1 mr-2">edit</mat-icon> Edit
+          </button>
+          <!-- Delete plan option (conditional on permission and plan status) -->
+          <button
+            mat-menu-item
+            (click)="confirmDelete(data.id, data.planStatus)"
+            [disabled]="data.planStatus !== 'PlanBuildInProgress'"
+            *ngIf="hasPermissionToDeleteBRPlan"
+          >
+            <mat-icon class="stroke-current stroke-1 mr-2"
+              >delete_forever</mat-icon
+            >
+            Delete
+          </button>
+
+          <button
+            mat-menu-item
+            (click)="rebuildPlan(data.id)"
+            [disabled]="data.planStatus === 'PlanBuildInProgress'"
+            *ngIf="hasPermissionToReBuild"
+          >
+            <mat-icon class="stroke-current stroke-1">build</mat-icon>Re-build
+          </button>
+          <button
+            mat-menu-item
+            (click)="exportPlanExcel(data.id)"
+            *ngIf="hasPermissionToExport"
+          >
+            <mat-icon class="stroke-current stroke-1">save_alt</mat-icon>Export
+          </button>
+          <button
+            mat-menu-item
+            (click)="importPlanExcel(data.id)"
+            *ngIf="hasPermissionToImport"
+          >
+            <mat-icon class="stroke-current stroke-1">ios_share</mat-icon>Import
+          </button>
+        </mat-menu>
+      </div>
+
+      <p class="text-sm text-justify">
+        {{
+          data.planDescription.length > 100
+            ? (data.planDescription | slice : 0 : 100) + "..."
+            : data.planDescription
+        }}
+      </p>
+      <!-- Display plan status -->
+      <div class="text-right mt-2 text-sm">
+        <app-status-highlighter
+          [status]="data.planStatus"
+        ></app-status-highlighter>
+      </div>
+    </div>
+    } } @else{
+    <div class="flex items-center justify-center h-48 font-semibold">
+      No Plan Found.
+    </div>
+    }
+  </div>
+</div>

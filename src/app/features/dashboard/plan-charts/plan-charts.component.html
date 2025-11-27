@@ -1,0 +1,72 @@
+<div class="w-full bg-mBgBlue tablet:bg-lblue md:bg-white shadow-lg p-4 h-auto tablet:h-auto md:h-auto pb-32 gap-4">
+  <div
+    class="bg-white  p-4 transition duration-300 flex flex-col gap-4">
+    <div class="w-full flex flex-col xl:flex-row gap-4">
+      <div id="chart1"
+        class="w-full xl:w-1/2 bg-white rounded-2xl border border-gray-200 shadow-xl p-4 transition duration-300 hover:shadow-2xl">
+        <div class="tablet:flex md:flex">
+          <span class="text-text items-center font-bold text-lg">Sequence - Task Spectrum
+          </span>
+          <span class="flex items-center font-semibold text-gray-600">
+            <mat-icon>keyboard_arrow_right</mat-icon> {{ planName }}
+          </span>
+        </div>
+        <apx-chart [series]="sequenceChart.series!" [chart]="sequenceChart.chart!"
+          [dataLabels]="sequenceChart.dataLabels!" [plotOptions]="sequenceChart.plotOptions!"
+          [xaxis]="sequenceChart.xaxis!" [stroke]="sequenceChart.stroke!" [fill]="sequenceChart.fill!"
+          [yaxis]="sequenceChart.yaxis!" [title]="sequenceChart.title!" [tooltip]="sequenceChart.tooltip!"
+          [legend]="sequenceChart.legend!" [labels]="sequenceChart.labels!" [colors]="sequenceChart.colors!"
+          [markers]="sequenceChart.markers!" [noData]="sequenceChart.noData!"></apx-chart>
+      </div>
+      <div id="chart1"
+        class="w-full xl:w-1/2 bg-white rounded-2xl border border-gray-200 shadow-xl p-4 transition duration-300 hover:shadow-2xl">
+        <div class="tablet:flex md:flex">
+          <span class="text-text items-center font-bold text-lg">
+            Task Status Snapshot
+          </span>
+          <span class="flex items-center font-semibold text-gray-600">
+            <mat-icon>keyboard_arrow_right</mat-icon> {{ planName }}
+            <mat-icon>keyboard_arrow_right</mat-icon> {{ sequenceName }}</span>
+        </div>
+        <apx-chart [series]="taskChart.series!" [chart]="taskChart.chart!" [dataLabels]="taskChart.dataLabels!"
+          [plotOptions]="taskChart.plotOptions!" [xaxis]="taskChart.xaxis!" [stroke]="taskChart.stroke!"
+          [fill]="taskChart.fill!" [yaxis]="taskChart.yaxis!" [title]="taskChart.title!" [tooltip]="taskChart.tooltip!"
+          [legend]="taskChart.legend!" [noData]="taskChart.noData!"></apx-chart>
+      </div>
+    </div>
+    <div class="w-full flex flex-col xl:flex-row gap-4">
+      <div id="charts"
+        class="w-full xl:w-1/2 bg-white rounded-2xl border border-gray-200 shadow-xl p-4 transition duration-300 hover:shadow-2xl">
+        <div class="tablet:flex md:flex">
+          <span class="text-text items-center font-bold text-lg">
+            Tasks Metrices - Test
+          </span>
+          <span class="flex items-center font-semibold text-gray-600">
+            <mat-icon>keyboard_arrow_right</mat-icon> {{ planName }}
+            <mat-icon>keyboard_arrow_right</mat-icon> {{ sequenceName }}
+            <mat-icon>keyboard_arrow_right</mat-icon> {{ taskName }}
+          </span>
+        </div>
+        <apx-chart [series]="testTaskMetrices.series!" [chart]="testTaskMetrices.chart!" [xaxis]="testTaskMetrices.xaxis!"
+        [yaxis]="testTaskMetrices.yaxis!" [stroke]="testTaskMetrices.stroke!" [tooltip]="testTaskMetrices.tooltip!"
+        [dataLabels]="testTaskMetrices.dataLabels!" [noData]="testTaskMetrices.noData!"></apx-chart>
+      </div>
+      <div id="charts"
+        class="w-full xl:w-1/2 bg-white rounded-2xl border border-gray-200 shadow-xl p-4 transition duration-300 hover:shadow-2xl">
+        <div class="tablet:flex md:flex">
+          <span class="text-text items-center font-bold text-lg">
+            Tasks Metrices - Execute
+          </span>
+          <span class="flex items-center font-semibold text-gray-600">
+            <mat-icon>keyboard_arrow_right</mat-icon> {{ planName }}
+            <mat-icon>keyboard_arrow_right</mat-icon> {{ sequenceName }}
+            <mat-icon>keyboard_arrow_right</mat-icon> {{ taskName }}
+          </span>
+        </div>
+        <apx-chart [series]="executeTaskMetrices.series!" [chart]="executeTaskMetrices.chart!" [xaxis]="executeTaskMetrices.xaxis!"
+        [yaxis]="executeTaskMetrices.yaxis!" [stroke]="executeTaskMetrices.stroke!" [tooltip]="executeTaskMetrices.tooltip!"
+        [dataLabels]="executeTaskMetrices.dataLabels!" [noData]="executeTaskMetrices.noData!"></apx-chart>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,125 @@
+<div
+  class="md:p-4 p-2 max-h-[80vh] mobile:h-[100dvh] mobileLandscape:h-[100dvh] tablet:p-4 flex flex-col w-[343px] md:w-auto tablet:w-auto mobileLandscape:w-auto mobileLandscape:overflow-y-auto bg-mBgBlue tablet:bg-lblue md:bg-lblue"
+>
+  <!-- Navigation bar with dynamic page title -->
+  <div class="flex justify-between">
+    <app-navigationbar
+      [pageTitle]="pageTitle + sequenceNumber"
+      [arrow]="false"
+    ></app-navigationbar>
+    <button mat-icon-button class="pt-8" mat-dialog-close>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="w-full bg-white shadow-lg p-4 flex-grow">
+    <!-- Task creation form with dynamic validation and submission -->
+    <form
+      [formGroup]="buildBRPlan"
+      (ngSubmit)="addNewTask($event)"
+      class="w-full mt-4 grid grid-cols-1 tablet:grid-cols-2 md:grid-cols-3 mobileLandscape:grid-cols-3 gap-4"
+    >
+      <!-- Task Title Input - Spans Full Width -->
+      <div class="flex flex-col w-full md:col-span-3 tablet:col-span-2">
+        <app-input-field
+          label="Task Title"
+          placeHolder="Text"
+          class="w-full"
+          [formGroup]="buildBRPlan"
+          controlName="taskTitle"
+          [maxValue]="60"
+        ></app-input-field>
+      </div>
+      <!-- Primary Team Member Dropdown -->
+      <div class="flex flex-col w-full">
+        <app-searchable-dropdown
+          label="Primary Team Member"
+          [options]="primaryTeamMembers"
+          [formGroup]="buildBRPlan"
+          controlName="primaryTeamMember"
+          (activeValue)="getBackupTeamMember()"
+          [hint]="true"
+          hintText="*Only Team Member users are shown.*"
+        ></app-searchable-dropdown>
+        <small class="text-text text-xs"
+          ></small
+        >
+      </div>
+
+      <!-- Backup Team Member Dropdown -->
+      <div class="flex flex-col w-full">
+        <app-searchable-dropdown
+          label="Backup Team Member"
+          [options]="backupTeamMembers"
+          [formGroup]="buildBRPlan"
+          [disabled]="!buildBRPlan.get('primaryTeamMember')?.value"
+          controlName="backupTeamMember"
+          [hint]="true"
+          hintText="*Only Team Member users are shown.*"
+        ></app-searchable-dropdown>
+      </div>
+
+      <!-- Task Estimate Input with Time Validation -->
+      <div class="flex flex-col w-full">
+        <app-input-field
+          label="Task Estimate"
+          placeHolder="HH:MM"
+          class="w-full"
+          [formGroup]="buildBRPlan"
+          pattern="^(?:[0-2][0-9]):(?:[0-5][0-9])$"
+          patternErrorMessage="Please enter a valid Task Estimate in HH:MM format"
+          controlName="taskEstimates"
+          [maxValue]="4"
+          (input)="formatTimeInput($event)"
+        ></app-input-field>
+      </div>
+      <!-- Task Description Input - Spans Full Width -->
+      <div
+        class="flex flex-col w-full md:col-span-3 tablet:col-span-2 mobileLandscape:col-span-2"
+      >
+        <app-input-field
+          label="Task Description"
+          placeHolder="Text"
+          class="w-full"
+          [formGroup]="buildBRPlan"
+          controlName="taskDescription"
+          [maxValue]="500"
+        ></app-input-field>
+      </div>
+
+      <div class="flex flex-col w-full md:col-span-2 tablet:col-span-2 mobileLandscape:col-span-2">
+        <app-file-upload
+          label="Upload File"
+          [accept]="'.txt,.png,.jpeg,.jpg,.webp,.pdf,.doc,.docx,.xls,.xlsx'"
+          [maxSize]="5"
+          [uploadedFileName]="existingFileName"
+          (fileSelected)="onFileChange($event)"
+          (isAttachmentRemoved)="onAttachmentRemoved($event)"
+        ></app-file-upload>
+      </div>
+      <div
+        class="flex flex-row md:col-span-3 tablet:col-span-2 mobileLandscape:col-span-3"
+      >
+        <div class="flex-1"></div>
+        <div class="items-center justify-end">
+          <button
+            type="reset"
+            class="mr-4 mat-raised-button-cancel text-toolbarBg bg-text px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+            mat-raised-button
+            (click)="cancel()"
+          >
+            CANCEL
+          </button>
+          <button
+            class="mat-raised-button text-toolbarBg bg-text px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+            mat-raised-button
+            (click)="addNewTask(buildBRPlan)"
+            [disabled]="saveButtonDisabled"
+          >
+            SAVE
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

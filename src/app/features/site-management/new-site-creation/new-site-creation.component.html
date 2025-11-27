@@ -1,0 +1,129 @@
+<div [class]="classValue" class="tablet:bg-lblue tablet:px-4">
+  <app-navigationbar
+    [pageTitle]="pageTitle"
+    [arrow]="backButton"
+  ></app-navigationbar>
+
+  <div class="w-full bg-white shadow-lg p-4 pb-64 md:block h-200 flex-grow">
+    <form
+      [formGroup]="createSite"
+      (ngSubmit)="add($event)"
+      class="w-full mt-4 grid grid-cols-1 tablet:grid-cols-2 md:grid-cols-3 gap-4"
+    >
+      <div class="flex flex-col w-full mb-4 tablet:col-span-2 md:col-span-2">
+        <app-input-field
+          label="Site Name"
+          placeHolder="Text"
+          class="w-full"
+          [formGroup]="createSite"
+          [maxValue]="20"
+          controlName="siteName"
+        ></app-input-field>
+        <!-- Input field for site name with form binding -->
+      </div>
+      <div class="flex flex-col w-full mb-4">
+        <app-input-field
+          label="Site Code"
+          placeHolder="Text"
+          class="w-full"
+          [formGroup]="createSite"
+          [minValue]="8"
+          [maxValue]="20"
+          patternErrorMessage="Site Code must be alphanumeric and can include underscores and spaces"
+          controlName="siteCode"
+        ></app-input-field>
+        <!-- Input field for site code with min/max validation and pattern error message -->
+      </div>
+      <div class="flex flex-col w-full mb-4">
+        <app-input-field
+          label="Address"
+          placeHolder="Text"
+          class="w-full"
+          [formGroup]="createSite"
+          controlName="address"
+        ></app-input-field>
+        <!-- Input field for site address -->
+      </div>
+      <div class="flex flex-col w-full mb-4">
+        <app-searchable-dropdown
+          label="Country"
+          [options]="country"
+          [formGroup]="createSite"
+          controlName="country"
+          (activeValue)="enableState(1)"
+        ></app-searchable-dropdown>
+        <!-- Dropdown for country selection that triggers state dropdown activation -->
+      </div>
+      <div class="flex flex-col w-full mb-4">
+        <app-searchable-dropdown
+          label="State"
+          [options]="state"
+          [formGroup]="createSite"
+          controlName="state"
+          (activeValue)="enableCity(1)"
+        ></app-searchable-dropdown>
+        <!-- Dropdown for state selection that triggers city dropdown activation -->
+      </div>
+      <div class="flex flex-col w-full mb-4">
+        <app-searchable-dropdown
+          label="City"
+          [options]="city"
+          [formGroup]="createSite"
+          controlName="city"
+          (activeValue)="enableZipCode(1)"
+        ></app-searchable-dropdown>
+        <!-- Dropdown for city selection that updates the Zip Code field -->
+      </div>
+      <div class="flex flex-col w-full mb-4">
+        <app-searchable-dropdown
+          label="Zip Code"
+          [options]="zipCodes"
+          [formGroup]="createSite"
+          controlName="zipCode"
+        ></app-searchable-dropdown>
+        <!-- Input field for Zip Code with numeric validation -->
+      </div>
+      <div class="flex flex-col w-full mb-4">
+        <app-dropdown
+          label="Status"
+          [options]="status"
+          [formGroup]="createSite"
+          controlName="status"
+        ></app-dropdown>
+        <!-- Dropdown for selecting site status (Active/Inactive) -->
+      </div>
+      <div class="flex flex-col w-full tablet:col-span-2 md:col-span-3">
+        <app-input-field
+          label="Description"
+          placeHolder="Enter a description (optional)"
+          class="w-full"
+          [formGroup]="createSite"
+          controlName="description"
+          [maxValue]="500"
+        ></app-input-field>
+        <!-- Input field for optional site description -->
+      </div>
+
+      <div class="flex flex-row md:col-span-3 tablet:col-span-2">
+        <div class="flex-1"></div>
+        <div class="items-center justify-end">
+          <button
+            class="mat-raised-button-cancel mr-4 text-toolbarBg bg-text px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+            mat-raised-button
+            (click)="back()"
+          >
+            CANCEL
+          </button>
+          <button
+            class="mat-raised-button text-toolbarBg bg-text px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+            mat-raised-button
+            (click)="add(createSite)"
+            [disabled]="saveButtonDisabled"
+          >
+            SAVE
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,6 @@
+<app-splash-screen
+  *ngIf="commonService.loading$ | async"
+  class="fixed inset-0 z-50 bg-white/80 flex items-center justify-center">
+</app-splash-screen>
+<app-snackbar></app-snackbar>
+<router-outlet></router-outlet>

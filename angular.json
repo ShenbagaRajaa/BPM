@@ -1,0 +1,171 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "BRMgr": {
+      "projectType": "application",
+      "schematics": {},
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:application",
+          "options": {
+            "allowedCommonJsDependencies": [
+              "apexcharts",
+              "process",
+              "tailwind.config.js"
+            ],
+            "outputPath": {
+              "base": "dist/acomdev",
+              "browser": ""
+            },
+            "index": "src/index.html",
+            "browser": "src/main.ts",
+            "polyfills": [
+              "zone.js"
+            ],
+            "tsConfig": "tsconfig.app.json",
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "@angular/material/prebuilt-themes/indigo-pink.css",
+              "src/styles.css"
+            ],
+            "scripts": [
+              
+            ]
+          },
+          "configurations": {
+            "production": {
+              "baseHref": "/",
+              "deployUrl": "/",
+              "optimization": true,
+              "aot": true,
+              "namedChunks": false,
+              "sourceMap": false,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "3MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "28kb",
+                  "maximumError": "3MB"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "src/environment/environment.ts",
+                  "with": "src/environment/environment.prod.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "uat": {
+              "baseHref": "/BRMgr-uat/",
+              "deployUrl": "/BRMgr-uat/",
+              "optimization": true,
+              "aot": true,
+              "namedChunks": false,
+              "sourceMap": false,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kB",
+                  "maximumError": "3MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "500kB",
+                  "maximumError": "3MB"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "src/environment/environment.ts",
+                  "with": "src/environment/environment.uat.ts"
+                }
+              ]
+            },
+            "mobile_uat": {
+              "baseHref": "/",
+              "deployUrl": "/",
+              "optimization": true,
+              "aot": true,
+              "namedChunks": false,
+              "sourceMap": false,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "3MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "28kb",
+                  "maximumError": "3MB"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "src/environment/environment.ts",
+                  "with": "src/environment/environment.uat.ts"
+                }
+              ],
+              "outputHashing": "all"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "BRMgr:build:production"
+            },
+            "uat": {
+              "buildTarget": "BRMgr:build:uat"
+            },
+            "mobile_uat": {
+              "buildTarget": "BRMgr:build:mobile_uat"
+            }
+          },
+          "defaultConfiguration": "uat"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
+            "tsConfig": "tsconfig.spec.json",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "public"
+              }
+            ],
+            "styles": [
+              "src/styles.css"
+            ],
+            "scripts": []
+          }
+        }
+      }
+    }
+  },
+  "cli": {
+    "analytics": "c1083188-4de3-4ca9-b741-fc2d6dddb691"
+  }
+}

@@ -1,0 +1,277 @@
+<div
+  class="md:p-4 pb-16 h-screen flex flex-col bg-mBgBlue md:bg-lblue tablet:bg-lblue tablet:px-4 tablet:overflow-y-auto tablet:no-scrollbar"
+>
+  <app-navigationbar [pageTitle]="pageTitle"></app-navigationbar>
+
+  <div
+    class="w-full bg-white shadow-lg p-4 pb-64 md:pb-24 tablet:pb-16 md:block h-200 flex-grow"
+  >
+    <form
+      [formGroup]="createUser"
+      (ngSubmit)="add($event)"
+      class="w-full mt-4 grid grid-cols-1 md:grid-cols-3 tablet:grid-cols-2 gap-2"
+    >
+      <!-- Title and First Name -->
+      <div class="flex flex-col w-full tablet:col-span-1">
+        <app-input-field
+          label="Title"
+          placeHolder="Eg. Mr"
+          class="w-full"
+          [formGroup]="createUser"
+          controlName="title"
+          [maxValue]="3"
+          patternErrorMessage="Title must contain only letters"
+        ></app-input-field>
+      </div>
+      <div class="flex flex-col w-full tablet:col-span-1">
+        <app-input-field
+          label="First Name"
+          placeHolder="Text"
+          class="w-full"
+          [formGroup]="createUser"
+          controlName="employeeFirstName"
+          [maxValue]="45"
+          patternErrorMessage="First Name must contain only letters and spaces"
+        ></app-input-field>
+      </div>
+
+      <!-- Last Name and DR Team -->
+      <div class="flex flex-col w-full tablet:col-span-1">
+        <app-input-field
+          label="Last Name"
+          placeHolder="Text"
+          class="w-full"
+          [formGroup]="createUser"
+          controlName="employeeLastName"
+          [maxValue]="45"
+          patternErrorMessage="Last Name must contain only letters and spaces"
+        ></app-input-field>
+      </div>
+      <div class="flex flex-row items-center w-full pr-2 tablet:col-span-1">
+        <app-searchable-dropdown
+          label="DR Team Name"
+          [options]="drTeamIds"
+          [formGroup]="createUser"
+          controlName="teamName"
+          class="flex"
+          [ngClass]="{
+            'w-5/6': hasPermissionToCreateDRTeam,
+            'w-full': !hasPermissionToCreateDRTeam
+          }"
+        ></app-searchable-dropdown>
+        <button
+          *ngIf="hasPermissionToCreateDRTeam"
+          mat-icon-button
+          matTooltip="Add New DR Team"
+          matTooltipPosition="below"
+          class="mb-4 cursor-pointer w-1/6"
+          (click)="drTeamCreation()"
+        >
+          <mat-icon class="mb-2 cursor-pointer">add_box</mat-icon>
+        </button>
+      </div>
+      <!-- DR Skill Selection -->
+      <div class="flex flex-row items-center w-full pr-2 tablet:col-span-1">
+        <app-searchable-dropdown
+          label="DR Skill"
+          [options]="drSkill"
+          [formGroup]="createUser"
+          controlName="skill"
+          [multiple]="true"
+          class="flex"
+          [ngClass]="{
+            'w-5/6': hasPermissionToCreateDRSkill,
+            'w-full': !hasPermissionToCreateDRSkill
+          }"
+        ></app-searchable-dropdown>
+        <button
+          *ngIf="hasPermissionToCreateDRSkill"
+          mat-icon-button
+          matTooltip="Add New DR Skill"
+          matTooltipPosition="below"
+          class="mb-4 cursor-pointer w-1/6"
+          (click)="drSkillCreation()"
+        >
+          <mat-icon class="mb-2 cursor-pointer">add_box</mat-icon>
+        </button>
+      </div>
+      <!-- Role and Address Inputs -->
+      <div class="flex flex-col w-full">
+        <app-searchable-dropdown
+          label="Role"
+          [options]="role"
+          [formGroup]="createUser"
+          controlName="roleName"
+        ></app-searchable-dropdown>
+      </div>
+      <div class="flex flex-col w-full">
+        <app-input-field
+          label="Address"
+          placeHolder="Text"
+          class="w-full"
+          [formGroup]="createUser"
+          controlName="address"
+          [maxValue]="45"
+        ></app-input-field>
+      </div>
+      <div class="flex flex-col w-full">
+        <app-input-field
+          label="Address 2"
+          placeHolder="Text"
+          class="w-full"
+          [formGroup]="createUser"
+          controlName="address2"
+          [maxValue]="45"
+        ></app-input-field>
+      </div>
+      <div class="flex flex-col w-full">
+        <app-searchable-dropdown
+          label="Country"
+          [options]="country"
+          [formGroup]="createUser"
+          controlName="country"
+          (activeValue)="enableState(1)"
+        ></app-searchable-dropdown>
+      </div>
+      <div class="flex flex-col w-full">
+        <app-searchable-dropdown
+          label="State"
+          [options]="state"
+          [formGroup]="createUser"
+          controlName="state"
+          (activeValue)="enableCity(1)"
+        ></app-searchable-dropdown>
+      </div>
+      <div class="flex flex-col w-full">
+        <app-searchable-dropdown
+          label="City"
+          [options]="city"
+          [formGroup]="createUser"
+          controlName="city"
+          (activeValue)="enableZipCode(1)"
+        ></app-searchable-dropdown>
+      </div>
+      <div class="flex flex-col w-full">
+        <app-searchable-dropdown
+          label="Zip code"
+          [options]="zipcodes"
+          [formGroup]="createUser"
+          controlName="zipCode"
+        ></app-searchable-dropdown>
+      </div>
+      <!-- Email validation -->
+      <div class="flex flex-col w-full tablet:col-span-2 md:col-span-2">
+        <app-input-field
+          label="Email"
+          placeHolder="Email"
+          class="w-full"
+          [email]="true"
+          [formGroup]="createUser"
+          controlName="email"
+        ></app-input-field>
+      </div>
+
+      <div class="flex flex-col w-full tablet:col-span-1 mb-3">
+        <app-input-field
+          label="Mobile Number"
+          placeHolder="XXX-XXX-XXXX"
+          class="w-full"
+          [formGroup]="createUser"
+          controlName="mobileNumber"
+          pattern="^[0-9]{3}-[0-9]{3}-[0-9]{4}$"
+          [countryCode]="countryCode"
+          (input)="formatPhoneNumber('mobileNumber')"
+        ></app-input-field>
+      </div>
+
+      <div class="flex flex-col w-full tablet:col-span-1">
+        <app-input-field
+          label="Emergency Contact Name"
+          placeHolder="Text"
+          class="w-full"
+          [formGroup]="createUser"
+          controlName="emergencyContactName"
+          [maxValue]="45"
+          patternErrorMessage="Emergency Contact Name must contain only letters and spaces"
+        ></app-input-field>
+      </div>
+
+      <div class="flex flex-col w-full tablet:col-span-2 md:col-span-2">
+        <app-input-field
+          label="Emergency Contact Email"
+          placeHolder="Email"
+          class="w-full"
+          [formGroup]="createUser"
+          controlName="emergencyContactEmail"
+          [email]="true"
+        ></app-input-field>
+      </div>
+      <!-- Emergency contact phone format validation -->
+      <div class="flex flex-col w-full tablet:col-span-1 mb-3">
+        <app-input-field
+          label="Emergency Contact Phone"
+          placeHolder="XXX-XXX-XXXX"
+          class="w-full"
+          [formGroup]="createUser"
+          [countryCode]="countryCode"
+          controlName="emergencyContactPhone"
+          pattern="^[0-9]{3}-[0-9]{3}-[0-9]{4}$"
+          (input)="formatPhoneNumber('emergencyContactPhone')"
+        ></app-input-field>
+      </div>
+      <!-- Form control for relationship -->
+      <div class="flex flex-col w-full tablet:col-span-1">
+        <app-input-field
+          label="Emergency Contact Relationship"
+          placeHolder="Text"
+          class="w-full"
+          [formGroup]="createUser"
+          controlName="emergencyContactRelationship"
+          [maxValue]="45"
+          patternErrorMessage="Emergency Contact Relationship must contain only letters and spaces"
+        ></app-input-field>
+      </div>
+      <!-- User Status and Profile Picture Inputs -->
+      <div class="flex flex-col w-full tablet:col-span-1">
+        <app-dropdown
+          label="Status"
+          [options]="status"
+          [formGroup]="createUser"
+          controlName="status"
+        ></app-dropdown>
+      </div>
+      <div class="flex flex-col w-full tablet:col-span-2">
+        <app-image-upload
+          label="Profile Picture"
+          [path]="profilePath"
+          [formGroup]="createUser"
+          controlName="profilePicture"
+          (activeValue)="getProfilePicture($event)"
+          (valid)="getProfileValid($event)"
+          (change)="onProfilePictureChange($event)"
+        ></app-image-upload>
+      </div>
+      <!-- Action Buttons (Cancel and Save) -->
+      <div class="flex flex-row tablet:col-span-2 md:col-span-3">
+        <div class="flex-1"></div>
+        <div class="items-center justify-end">
+          <button
+            class="mat-raised-button-cancel mr-4 text-toolbarBg bg-text px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+            mat-raised-button
+            (click)="back()"
+          >
+            CANCEL
+          </button>
+          <button
+            class="mat-raised-button text-toolbarBg bg-text px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+            mat-raised-button
+            (click)="add(createUser)"
+            [disabled]="saveButtonDisabled"
+          >
+            SAVE
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

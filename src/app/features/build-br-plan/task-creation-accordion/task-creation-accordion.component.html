@@ -1,0 +1,54 @@
+<div
+  class="md:flex flex flex-row mb-4 bg-white md:bg-white"
+  *ngIf="!isSequenceComplete"
+>
+  <div class="flex md:w-auto w-full">
+    <button
+      class="mat-raised-button md:w-auto w-full text-toolbarBg bg-text px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+      mat-raised-button
+      (click)="confirmDelete(sequenceId)"
+      *ngIf="hasPermissionToDeleteSequence"
+    >
+      DELETE
+    </button>
+  </div>
+  <div class="flex-1"></div>
+  <div class="flex justify-end md:w-auto w-full">
+    <!-- "Sequence Build Complete" button - visible only if the user has edit permissions and there are tasks included -->
+    <div
+      *ngIf="hasPermissionToEditSequence && isIncludeTask"
+      class="md:flex hidden"
+    >
+      <button
+        class="mat-raised-button text-toolbarBg md:w-auto w-full bg-text px-4 py-2 mr-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+        mat-raised-button
+        (click)="updateSequence()"
+      >
+        SEQUENCE BUILD COMPLETE
+      </button>
+    </div>
+    <!-- "Add Task" button - visible if the user has permissions to add tasks -->
+    <button
+      *ngIf="hasPermissionToAddTask"
+      class="mat-raised-button text-toolbarBg ml-2 md:w-auto w-full bg-text px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+      mat-raised-button
+      (click)="addTask()"
+      [disabled]="addTaskButton"
+    >
+      ADD TASK
+    </button>
+  </div>
+</div>
+
+<!-- Separate section for "Sequence Build Complete" button in mobile view -->
+<div class="md:hidden flex md:w-auto w-full" *ngIf="!isSequenceComplete">
+  <div *ngIf="hasPermissionToEditSequence && isIncludeTask">
+    <button
+      class="mat-raised-button md:w-auto w-full text-toolbarBg bg-text px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+      mat-raised-button
+      (click)="updateSequence()"
+    >
+      SEQUENCE BUILD COMPLETE
+    </button>
+  </div>
+</div>

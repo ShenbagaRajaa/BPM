@@ -1,0 +1,91 @@
+<div
+  class="md:p-4 md:pb-16 tablet:px-4 h-screen flex flex-col bg-mBgBlue tablet:bg-lblue md:bg-lblue"
+>
+  <!-- Navigation bar with dynamic title -->
+  <app-navigationbar
+    class="md:block"
+    pageTitle="Execute Plan"
+  ></app-navigationbar>
+  <div
+    class="w-full bg-mBgBlue md:bg-white tablet:bg-white shadow-lg p-4 flex-grow md:pb-20 pb-64"
+  >
+    <div class="flex flex-row justify-end align-end gap-4">
+      <div class="w-full tablet:w-[40%] md:w-[40%] lg:w-[30%]">
+        <app-searchable-dropdown
+          [value]="selectedPlanId"
+          valueField="id"
+          blankMsg="plan"
+          displayField="planName"
+          (activeValue)="getPlanIdentifier($event); removeLS()"
+          [options]="filterByOptions"
+        ></app-searchable-dropdown>
+      </div>
+    </div>
+    <div
+      id="chart1"
+      class="w-full bg-white rounded-2xl border border-gray-200 shadow-xl p-4 transition duration-300 hover:shadow-2xl"
+    >
+      <div class="tablet:flex md:flex">
+        <span class="text-text items-center font-bold text-lg"
+          >Execute Plan
+        </span>
+      </div>
+      <apx-chart
+        [series]="sequenceChart.series!"
+        [chart]="sequenceChart.chart!"
+        [dataLabels]="sequenceChart.dataLabels!"
+        [plotOptions]="sequenceChart.plotOptions!"
+        [xaxis]="sequenceChart.xaxis!"
+        [stroke]="sequenceChart.stroke!"
+        [fill]="sequenceChart.fill!"
+        [yaxis]="sequenceChart.yaxis!"
+        [title]="sequenceChart.title!"
+        [tooltip]="sequenceChart.tooltip!"
+        [legend]="sequenceChart.legend!"
+        [labels]="sequenceChart.labels!"
+        [colors]="sequenceChart.colors!"
+        [markers]="sequenceChart.markers!"
+        [noData]="sequenceChart.noData!"
+      ></apx-chart>
+    </div>
+    <div class="w-full flex mt-4">
+      <div class="flex w-1/2 md:w-2/4 tablet:w-2/4 px-2">
+        <button
+          *ngIf="isPlanReadyToBeExecuted"
+          mat-raised-button
+          class="h-10 sm:h-12 text-sm mb-4 sm:text-base mat-raised-button text-toolbarBg bg-text px-3 sm:px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+          (click)="notifyAll()"
+        >
+          NOTIFY ALL
+        </button>
+      </div>
+      <!-- Button aligned to the right -->
+      <div class="flex w-1/2 justify-end md:w-2/4 tablet:w-2/4 px-2">
+        <button
+          [disabled]="!isPlanExecuted"
+          *ngIf="hasPermissionToReExecute"
+          mat-raised-button
+          class="h-10 sm:h-12 text-sm mb-4 sm:text-base mat-raised-button text-toolbarBg bg-text px-3 sm:px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+          (click)="reExecutePlan()"
+        >
+          RE-EXECUTE
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="show">
+      <!-- Component displaying sequence count for selected plan -->
+      <app-sequence-count-card [planId]="planId"></app-sequence-count-card>
+      <!-- Secondary navigation bar without arrow -->
+      <app-navigationbar
+        [arrow]="false"
+        pageTitle="Sequence List"
+      ></app-navigationbar>
+      <!-- Accordion component to display sequence details -->
+      <app-sequence-accordian
+        [planId]="planId"
+        module="executeBRPlan"
+      ></app-sequence-accordian>
+    </div>
+  </div>
+</div>

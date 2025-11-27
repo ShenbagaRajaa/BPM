@@ -1,0 +1,261 @@
+<div
+  class="md:p-4 h-screen min-h-screen flex flex-col bg-mBgBlue md:bg-lblue tablet:bg-lblue tablet:px-4 scroll-container"
+>
+  <!-- Header Section with the page title and action buttons -->
+  <div class="flex items-center justify-between">
+    <div class="flex items-center flex-grow">
+      <!-- Custom navigation bar component with dynamic page title -->
+      <app-navigationbar
+        [pageTitle]="pageTitle"
+        class="flex-shrink-0"
+      ></app-navigationbar>
+      <!-- Plan identifier section, shown only if a plan identifier exists -->
+      <div
+        *ngIf="planIdentifier"
+        class="hidden md:flex md:text-[20px] lg:flex items-center ml-4 text-text text-base lg:text-lg font-bold"
+      >
+        <span class="identifier-part">
+          {{ planName }}
+        </span>
+      </div>
+    </div>
+    <!-- Action buttons displayed conditionally based on permissions and plan status -->
+
+    <div
+      class="flex flex-wrap gap-2 md:flex-nowrap mt-4 md:mt-0 mr-4"
+      *ngIf="showButtons"
+    >
+      <!-- Build Complete button -->
+      <button
+        *ngIf="showBuildCompleteButton && canBuildComplete"
+        mat-raised-button
+        class="h-10 sm:h-12 text-sm sm:text-base mat-raised-button text-toolbarBg bg-text px-3 sm:px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+        (click)="buildComplete()"
+      >
+        Build Complete
+      </button>
+      <!-- Promote Plan to Test button -->
+
+      <button
+        *ngIf="showPromoteButton && canPromoteToTest"
+        mat-raised-button
+        class="h-10 sm:h-12 text-sm sm:text-base mat-raised-button text-toolbarBg bg-text px-3 sm:px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+        (click)="promotePlanToTest()"
+      >
+        Promote Plan to Test
+      </button>
+      <!-- Approve Plan button (only shown if the plan status is 'PlanTested') -->
+
+      <button
+        *ngIf="canApprovePlan && planStatus === 'PlanTested'"
+        mat-raised-button
+        class="h-10 sm:h-12 text-sm sm:text-base mat-raised-button text-toolbarBg bg-text px-3 sm:px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+        (click)="approvePlan()"
+      >
+        Approve Plan
+      </button>
+
+      <button
+        *ngIf="canPromoteToExecution && planStatus === 'PlanApproved'"
+        mat-raised-button
+        class="h-10 sm:h-12 text-sm sm:text-base mat-raised-button text-toolbarBg bg-text px-3 sm:px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+        (click)="promotePlanToExecution()"
+      >
+        Promote Plan to Execution
+      </button>
+    </div>
+  </div>
+
+  <div class="w-full bg-white shadow-lg p-4 flex-grow pb-52 md:pb-20">
+    <div class="flex flex-row justify-end align-end">
+      <div class="w-full tablet:w-[40%] md:w-[40%] lg:w-[30%]">
+        <app-searchable-dropdown
+          label="Filter By"
+          [value]="planId"
+          (activeValue)="progressPlanDetails($event); removeLS()"
+          [options]="filterByOptions"
+        ></app-searchable-dropdown>
+      </div>
+    </div>
+    <form
+      [formGroup]="buildBRPlan"
+      class="w-full my-4 grid grid-cols-1 tablet:grid-cols-2 md:grid-cols-4 gap-5 rounded-lg border p-4 tablet:p-2"
+    >
+      <!-- Plan Name input field -->
+      <div class="flex flex-col w-full md:col-span-2 tablet:col-span-2">
+        <app-input-field
+          [disabled]="disableForEdit"
+          label="Plan Name"
+          placeHolder="Plan Name"
+          class="w-full"
+          [formGroup]="buildBRPlan"
+          controlName="planName"
+          [maxValue]="60"
+        ></app-input-field>
+      </div>
+      <!-- Dropdown for selecting Plan Type -->
+      <div class="flex flex-col w-full">
+        <app-searchable-dropdown
+          label="Plan Type"
+          [options]="planTypes"
+          [formGroup]="buildBRPlan"
+          controlName="planTypeId"
+        ></app-searchable-dropdown>
+      </div>
+      <!-- Dropdown for selecting Plan Level -->
+      <div class="flex flex-col w-full">
+        <app-searchable-dropdown
+          label="Plan Level"
+          [options]="planLevels"
+          [formGroup]="buildBRPlan"
+          controlName="planLevelId"
+        ></app-searchable-dropdown>
+      </div>
+      <!-- Dropdown for selecting Site -->
+      <div class="flex flex-col w-full">
+        <app-searchable-dropdown
+          label="Site"
+          [options]="sites"
+          [formGroup]="buildBRPlan"
+          controlName="siteId"
+          (activeValue)="customerCode()"
+        ></app-searchable-dropdown>
+      </div>
+      <!-- Dropdown for selecting Department -->
+      <div class="flex flex-col w-full">
+        <app-searchable-dropdown
+          label="Department"
+          [options]="departments"
+          (activeValue)="customerCode()"
+          [formGroup]="buildBRPlan"
+          controlName="departmentId"
+        ></app-searchable-dropdown>
+      </div>
+      <!-- System Abbreviation dropdown and button to create new system -->
+      <div class="flex flex-row items-center w-full pr-2">
+        <app-searchable-dropdown
+          label="System Abbreviation"
+          [options]="systems"
+          (activeValue)="customerCode()"
+          [formGroup]="buildBRPlan"
+          controlName="systemId"
+          class="flex"
+          [ngClass]="{
+            'w-5/6': hasPermissionToSystemCreation,
+            'w-full': !hasPermissionToSystemCreation
+          }"
+        >
+        </app-searchable-dropdown>
+        <!-- Button to add new system, shown if user has permission -->
+        <button
+          *ngIf="hasPermissionToSystemCreation"
+          mat-icon-button
+          matTooltip="Add New System"
+          matTooltipPosition="below"
+          class="mb-4 cursor-pointer w-1/6"
+          (click)="systemCreation()"
+        >
+          <mat-icon class="mb-2 cursor-pointer">add_box</mat-icon>
+        </button>
+      </div>
+      <!-- Customer Code input field, read-only -->
+      <div class="flex flex-col w-full">
+        <app-input-field
+          label="Plan ID"
+          placeHolder="Plan ID"
+          class="w-full"
+          [formGroup]="buildBRPlan"
+          controlName="customerCode"
+          [readOnly]="true"
+        ></app-input-field>
+      </div>
+      <!-- Plan Description input field, read-only based on user permissions -->
+      <div class="flex flex-col w-full md:col-span-4 tablet:col-span-2">
+        <app-input-field
+          label="Plan Description"
+          placeHolder="Plan Description"
+          class="w-full"
+          [formGroup]="buildBRPlan"
+          controlName="planDescription"
+          [readOnly]="!hasPermissionToEditPlan"
+          [maxValue]="500"
+        ></app-input-field>
+      </div>
+      <div
+        class="flex flex-col w-full md:col-span-2 tablet:col-span-2"
+        *ngIf="planId"
+      >
+        <app-input-field
+          label="Created Date"
+          placeHolder="Created Date"
+          class="w-full"
+          [formGroup]="buildBRPlan"
+          controlName="createdDate"
+          [readOnly]="true"
+        ></app-input-field>
+      </div>
+      <div
+        class="flex flex-col w-full md:col-span-2 tablet:col-span-2"
+        *ngIf="planId"
+      >
+        <app-input-field
+          label="Last Modified Date"
+          placeHolder="Last Modified Date"
+          class="w-full"
+          [formGroup]="buildBRPlan"
+          controlName="lastChangedDate"
+          [readOnly]="true"
+        ></app-input-field>
+      </div>
+      <!-- Buttons to cancel or save the form, conditionally displayed -->
+      <div
+        class="flex flex-row md:col-span-4 tablet:col-span-2"
+        *ngIf="
+          hasPermissionToEditPlan &&
+          hasPermissionToAddPlan &&
+          (planStatus === 'PlanBuildInProgress' || planStatus === '')
+        "
+      >
+        <div class="flex-1"></div>
+        <div class="items-center justify-end">
+          <!-- Cancel button -->
+          <button
+            type="reset"
+            class="mat-raised-button-cancel mr-4 text-toolbarBg bg-text px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+            mat-raised-button
+            (click)="cancel()"
+          >
+            CANCEL
+          </button>
+          <!-- Save button, disabled based on form status -->
+          <button
+            class="mat-raised-button text-toolbarBg bg-text px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+            mat-raised-button
+            (click)="addNewPlan($event)"
+            [disabled]="saveButtonDisabled"
+            type="submit"
+          >
+            SAVE
+          </button>
+        </div>
+      </div>
+    </form>
+    <!-- Section to display the sequence accordion if allowed -->
+    <div *ngIf="isAccordionVisible">
+      <app-navigationbar
+        *ngIf="hasPermissionToAddSequence"
+        [arrow]="false"
+        [button]="planStatus === 'PlanBuildInProgress'"
+        buttonLabel="ADD NEW SEQUENCE"
+        pageTitle="Sequence List"
+        (activeValue)="planStatus === 'PlanBuildInProgress' && addNewSequence()"
+      ></app-navigationbar>
+
+      <app-sequence-accordian
+        [planId]="planId"
+        module="buildBRPlan"
+        [refreshTrigger]="reloadTimestamp"
+      ></app-sequence-accordian>
+    </div>
+  </div>
+</div>

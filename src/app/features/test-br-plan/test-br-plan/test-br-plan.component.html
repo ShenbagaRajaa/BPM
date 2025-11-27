@@ -1,0 +1,88 @@
+<div
+  class="md:p-4 md:pb-16 tablet:px-4 h-screen flex flex-col bg-mBgBlue tablet:bg-lblue md:bg-lblue"
+>
+  <!-- Navigation bar displaying the page title "Test BR Plan" -->
+  <app-navigationbar class="md:block" pageTitle="Test Plan"></app-navigationbar>
+  <div
+    class="w-full bg-mBgBlue md:bg-white tablet:bg-white shadow-lg p-4 flex-grow pb-64 md:pb-20"
+  >
+    <div class="flex flex-row justify-end align-end gap-4">
+      <div class="w-full tablet:w-[40%] md:w-[40%] lg:w-[30%]">
+        <app-searchable-dropdown
+          [value]="selectedPlanId"
+          valueField="id"
+          blankMsg="plan"
+          displayField="planName"
+          (activeValue)="getPlanIdentifier($event); removeLS()"
+          [options]="filterByOptions"
+        ></app-searchable-dropdown>
+      </div>
+    </div>
+    <div
+      id="chart1"
+      class="w-full bg-white rounded-2xl border border-gray-200 shadow-xl p-4 transition duration-300 hover:shadow-2xl"
+    >
+      <div class="tablet:flex md:flex">
+        <span class="text-text items-center font-bold text-lg">Test Plan </span>
+      </div>
+      <apx-chart
+        [series]="sequenceChart.series!"
+        [chart]="sequenceChart.chart!"
+        [dataLabels]="sequenceChart.dataLabels!"
+        [plotOptions]="sequenceChart.plotOptions!"
+        [xaxis]="sequenceChart.xaxis!"
+        [stroke]="sequenceChart.stroke!"
+        [fill]="sequenceChart.fill!"
+        [yaxis]="sequenceChart.yaxis!"
+        [title]="sequenceChart.title!"
+        [tooltip]="sequenceChart.tooltip!"
+        [legend]="sequenceChart.legend!"
+        [labels]="sequenceChart.labels!"
+        [colors]="sequenceChart.colors!"
+        [markers]="sequenceChart.markers!"
+        [noData]="sequenceChart.noData!"
+      ></apx-chart>
+    </div>
+    <!-- Dropdown to select a plan, with options bound to 'planIdentifiers' -->
+    <div class="w-full flex mt-4">
+      <div class="flex w-1/2 md:w-2/4 tablet:w-2/4 px-2">
+        <button
+          *ngIf="isPlanReadyToBeTested"
+          mat-raised-button
+          class="h-10 sm:h-12 text-sm mb-4 sm:text-base mat-raised-button text-toolbarBg bg-text px-3 sm:px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+          (click)="notifyAll()"
+        >
+          NOTIFY ALL
+        </button>
+      </div>
+
+      <!-- Button aligned to the right -->
+      <div class="w-1/2 flex justify-end md:w-2/4 tablet:w-2/4 px-2">
+        <button
+          [disabled]="!isPlanTested"
+          *ngIf="hasPermissionToReTest"
+          mat-raised-button
+          class="h-10 sm:h-12 text-sm mb-4 sm:text-base mat-raised-button text-toolbarBg bg-text px-3 sm:px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+          (click)="reTestPlan()"
+        >
+          RE-TEST
+        </button>
+      </div>
+    </div>
+    <!-- Conditional content shown when 'show' is true -->
+    <div *ngIf="show">
+      <!-- Display sequence count card, passing the selected 'planId' -->
+      <app-sequence-count-card [planId]="planId"> </app-sequence-count-card>
+      <!-- Navigation bar for the sequence list page with no back button -->
+      <app-navigationbar
+        [arrow]="false"
+        pageTitle="Sequence List"
+      ></app-navigationbar>
+      <!-- Accordion component to show sequences related to the selected plan -->
+      <app-sequence-accordian
+        [planId]="planId"
+        module="testBRPlan"
+      ></app-sequence-accordian>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,5 @@
+<div class="md:p-4 md:pb-64 h-screen md:flex flex-col w-full bg-mBgBlue tablet:bg-lblue md:bg-lblue scroll-container">
+  <app-navigationbar class="block" pageTitle="Dashboard" [arrow]="false"></app-navigationbar>
+  <app-total-charts (planSelected)="onPlanSelected($event)"></app-total-charts>
+  <app-plan-charts [selectedPlan]="selectedPlanId"></app-plan-charts>
+</div>

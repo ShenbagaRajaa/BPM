@@ -1,0 +1,95 @@
+<div class="md:p-4 pb-16 h-screen flex flex-col tablet:bg-lblue tablet:px-4">
+  <!-- Navigation Bar with Create Button (Visible if user has permission) -->
+  <app-navigationbar
+    pageTitle="DR Team Management"
+    [arrow]="false"
+    [button]="hasPermissionToCreate"
+    buttonLabel="CREATE NEW DR TEAM"
+    (activeValue)="createDRTeam()"
+  ></app-navigationbar>
+  <!-- Desktop & Tablet View -->
+  <div
+    class="w-full bg-white shadow-lg p-4 pb-16 flex-grow md:flex tablet:flex hidden md:pb-16"
+  >
+    <div class="p-4 w-full">
+      <h4 class="text-xl mb-4">DR Team List</h4>
+      <div class="rounded-lg border p-4">
+        <div
+          class="flex flex-wrap items-center justify-between space-y-4 md:space-y-0"
+        >
+          <!-- Search Input Field (Only visible in desktop view) -->
+          <div class="hidden md:block w-full tablet:w-1/3 md:w-1/3">
+            <app-input-field
+              label="Search"
+              (activeValue)="externalFilterChanged($event)"
+              placeHolder="Search By Name"
+            ></app-input-field>
+          </div>
+        </div>
+        <!-- AG Grid Table for Listing DR Teams -->
+        <div class="mt-6">
+          <ag-grid-angular
+            [rowData]="rowData"
+            [columnDefs]="displayedColumns"
+            class="ag-theme-quartz"
+            [domLayout]="'autoHeight'"
+            [pagination]="pagination"
+            [rowHeight]="50"
+            [paginationPageSize]="paginationPageSize"
+            [paginationPageSizeSelector]="paginationPageSizeSelector"
+            overlayNoRowsTemplate="<div style='position: absolute; top: 60px; left: 50%; transform: translateX(-50%); font-size: 16px; font-weight: bold; color: #555;'>
+                  No DR Team found matching your criteria.
+                </div>"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Mobile View -->
+  <div class="block md:hidden tablet:hidden pb-28">
+    <div class="w-full px-4">
+      <app-input-field
+        label="Search"
+        placeHolder="Search ..."
+        class="w-full"
+        (activeValue)="externalFilterChanged($event)"
+      ></app-input-field>
+    </div>
+    <div
+      class="mt-4 bg-mCard min-h-[650px] p-4 rounded-t-3xl border pt-12 pb-32"
+    >
+      <h4 class="text-xl font-semibold mb-4">DR Teams List</h4>
+      <!-- Conditional Rendering: If Data Exists, Display List -->
+      @if(rowData.length !== 0){ @for(data of rowData; track rowData){
+      <div class="w-full bg-gray-100 p-4 rounded-lg mb-4 shadow-md">
+        <div class="flex justify-between">
+          <h5
+            class="text-lg font-medium text-text"
+            (click)="openDRTeamDetails(data)"
+          >
+            {{ data.teamName }}
+          </h5>
+          <mat-icon [matMenuTriggerFor]="aboveMenu">more_vert</mat-icon>
+          <mat-menu #aboveMenu="matMenu" yPosition="above">
+            <button mat-menu-item (click)="createDRTeam(data)">
+              <mat-icon class="stroke-current stroke-1 mr-2">edit</mat-icon>
+              Edit
+            </button>
+            <button mat-menu-item (click)="confirmDelete(data.id)">
+              <mat-icon class="stroke-current stroke-1 mr-2"
+                >delete_forever</mat-icon
+              >
+              Delete
+            </button>
+          </mat-menu>
+        </div>
+      </div>
+      <!-- Display Message If No DR Teams Are Found -->
+      } }@else{
+      <div class="text-center text-gray-500 mt-6">
+        No DR Team found matching your criteria.
+      </div>
+      }
+    </div>
+  </div>
+</div>

@@ -1,0 +1,7 @@
+@media (max-width: 1024px) {
+    .scroll-container {
+        /* Limit the container's height to 70% of the viewport height and enable vertical scrolling */
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+  }

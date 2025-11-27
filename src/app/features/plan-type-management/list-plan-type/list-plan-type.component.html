@@ -1,0 +1,94 @@
+<div class="md:p-4 pb-16 h-screen flex flex-col tablet:bg-lblue tablet:px-4">
+  <!-- Navigation bar component with title and button visibility control -->
+  <app-navigationbar
+    pageTitle="Plan Type Management"
+    [arrow]="false"
+    [button]="hasPermissionToCreate"
+    buttonLabel="CREATE NEW PLAN TYPE"
+    (activeValue)="createPlanType()"
+  ></app-navigationbar>
+  <!-- Desktop layout for displaying the plan types -->
+  <div
+    class="w-full bg-white shadow-lg p-4 pb-28 flex-grow md:flex hidden tablet:flex md:pb-16"
+  >
+    <div class="p-4 w-full">
+      <h4 class="text-xl mb-4">Plan Type List</h4>
+      <div class="rounded-lg border p-4">
+        <div
+          class="flex flex-wrap items-center justify-between space-y-4 md:space-y-0"
+        >
+          <!-- Search input field for filtering plan types -->
+          <div class="hidden md:block w-full tablet:w-1/3 md:w-1/3">
+            <app-input-field
+              label="Search"
+              (activeValue)="externalFilterChanged($event)"
+              placeHolder="Search "
+            ></app-input-field>
+          </div>
+        </div>
+        <!-- Grid container for displaying plan types using ag-Grid -->
+        <div class="mt-6">
+          <ag-grid-angular
+            [rowData]="rowData"
+            [columnDefs]="displayedColumns"
+            class="ag-theme-quartz"
+            [domLayout]="'autoHeight'"
+            [pagination]="pagination"
+            [rowHeight]="50"
+            [paginationPageSize]="paginationPageSize"
+            [paginationPageSizeSelector]="paginationPageSizeSelector"
+            overlayNoRowsTemplate="
+                <div style='position: absolute; top: 60px; left: 50%; transform: translateX(-50%); font-size: 16px; font-weight: bold; color: #555;'>
+                    No Plan Types found matching your criteria.
+                </div>"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Mobile layout for displaying the plan types -->
+  <div class="block md:hidden tablet:hidden pb-28">
+    <div class="w-full px-4">
+      <app-input-field
+        label="Search"
+        placeHolder="Search..."
+        class="w-full"
+        (activeValue)="externalFilterChanged($event)"
+      ></app-input-field>
+    </div>
+    <div
+      class="mt-4 bg-mCard min-h-[650px] p-4 rounded-t-3xl border pt-12 pb-32"
+    >
+      <h4 class="text-xl font-semibold mb-4">Plan Type List</h4>
+      @if(rowData.length !== 0){ @for(data of rowData; track rowData){
+      <div class="w-full bg-gray-100 p-4 rounded-lg mb-4 shadow-md">
+        <div class="flex justify-between">
+          <h5
+            class="text-lg font-medium text-text"
+            (click)="viewPlanTypeDetails(data)"
+          >
+            {{ data.planTypeName }}
+          </h5>
+          <mat-icon [matMenuTriggerFor]="aboveMenu">more_vert</mat-icon>
+          <mat-menu #aboveMenu="matMenu" yPosition="above">
+            <button mat-menu-item (click)="createPlanType(data)">
+              <mat-icon class="stroke-current stroke-1 mr-2">edit</mat-icon>
+              Edit
+            </button>
+            <button mat-menu-item (click)="confirmDelete(data.id)">
+              <mat-icon class="stroke-current stroke-1 mr-2"
+                >delete_forever</mat-icon
+              >
+              Delete
+            </button>
+          </mat-menu>
+        </div>
+      </div>
+      } }@else{
+      <div class="text-center text-gray-500 mt-6">
+        No plan type found matching your criteria.
+      </div>
+      }
+    </div>
+  </div>
+</div>

@@ -1,0 +1,9 @@
+h3{
+    color: var(--text);
+    font-size:x-large;
+    font-weight: bold;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

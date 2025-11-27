@@ -1,0 +1,67 @@
+<div
+  class="md:p-4 tablet:px-4 pb-16 h-screen flex flex-col bg-mBgBlue md:bg-lblue tablet:bg-lblue"
+>
+  <app-navigationbar [pageTitle]="pageTitle"></app-navigationbar>
+
+  <div class="w-full bg-white shadow-lg p-4 pb-64 md:block h-200 flex-grow">
+    <form
+      [formGroup]="createPlanTypeForm"
+      (ngSubmit)="savePlanType()"
+      class="w-full mt-4 grid grid-cols-1 tablet:grid-cols-2 md:grid-cols-2 gap-4"
+    >
+      <!-- Plan Type Name -->
+      <div class="flex flex-col w-full">
+        <app-input-field
+          label="Plan Type Name"
+          placeHolder="Enter Plan Type Name"
+          class="w-full"
+          [formGroup]="createPlanTypeForm"
+          [maxValue]="30"
+          controlName="planTypeName"
+        ></app-input-field>
+      </div>
+
+      <!-- Status -->
+      <div class="flex flex-col w-full">
+        <app-dropdown
+          label="Status"
+          [options]="statusOptions"
+          [formGroup]="createPlanTypeForm"
+          controlName="status"
+        ></app-dropdown>
+      </div>
+      <div class="flex flex-col w-full tablet:col-span-2 md:col-span-2">
+        <app-input-field
+          label="Description"
+          placeHolder="Enter a description (optional)"
+          class="w-full"
+          [formGroup]="createPlanTypeForm"
+          controlName="description"
+          [maxValue]="500"
+        ></app-input-field>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex flex-row md:col-span-3 tablet:col-span-2 mt-4">
+        <div class="flex-1"></div>
+        <div class="items-center justify-end">
+          <button
+            class="mat-raised-button-cancel mr-4 text-toolbarBg bg-text px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+            mat-raised-button
+            (click)="cancel()"
+          >
+            CANCEL
+          </button>
+          <button
+            class="mat-raised-button text-toolbarBg bg-text px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+            mat-raised-button
+            type="submit"
+            [disabled]="saveButtonDisabled"
+          >
+            SAVE
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
