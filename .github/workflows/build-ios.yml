@@ -9,7 +9,7 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout Repo
         uses: actions/checkout@v4
 
       - name: Setup Node
@@ -25,22 +25,41 @@ jobs:
           npm run build
           npx cap sync ios
 
+      # ---------------------------
+      # Certificates & provisioning
+      # ---------------------------
       - name: Decode certificates
         run: |
           echo "$CERT_P12" | base64 --decode > cert.p12
           echo "$MOBILEPROVISION" | base64 --decode > profile.mobileprovision
 
-      - name: Build & Archive IPA
+      - name: Install certificate
         run: |
-          xcodebuild -workspace ios/App/App.xcworkspace \
+          security create-keychain -p "" build.keychain
+          security import cert.p12 -k build.keychain -P "$CERT_P12_PASSWORD" -A
+          security default-keychain -s build.keychain
+          security unlock-keychain -p "" build.keychain
+          security set-keychain-settings -lu build.keychain
+
+      - name: Install provisioning profile
+        run: |
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          cp profile.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/
+
+      # ---------------------------
+      # Build IPA
+      # ---------------------------
+      - name: Build IPA with Xcode
+        run: |
+          xcodebuild archive \
+            -workspace ios/App/App.xcworkspace \
             -scheme App \
             -configuration Release \
             -archivePath output/App.xcarchive \
             DEVELOPMENT_TEAM=J6MWBCBLW7 \
-            CODE_SIGN_STYLE=Automatic \
-            PROVISIONING_PROFILE_SPECIFIER="" \
-            PROVISIONING_PROFILE="" \
-            clean archive \
+            PROVISIONING_PROFILE_SPECIFIER="Shenbagaraj K" \
+            PRODUCT_BUNDLE_IDENTIFIER=com.bpmgr.app \
+            CODE_SIGN_STYLE=Manual \
             -allowProvisioningUpdates
 
       - name: Export IPA
@@ -48,8 +67,7 @@ jobs:
           xcodebuild -exportArchive \
             -archivePath output/App.xcarchive \
             -exportOptionsPlist ios/App/exportOptions.plist \
-            -exportPath output \
-            -allowProvisioningUpdates
+            -exportPath output
 
       - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4
