@@ -35,7 +35,7 @@ jobs:
             -scheme App \
             -configuration Release \
           CODE_SIGN_STYLE=Automatic \
-          DEVELOPMENT_TEAM=<YOUR_TEAM_ID>
+          DEVELOPMENT_TEAM=J6MWBCBLW7
       - name: Build IPA with Xcode
         run: |
           xcodebuild -workspace ios/App/App.xcworkspace \
