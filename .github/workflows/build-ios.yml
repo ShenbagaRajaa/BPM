@@ -1,0 +1,53 @@
+name: Build iOS IPA
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-ios:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Capacitor sync
+        run: |
+          npm run build
+          npx cap sync ios
+
+      - name: Decode certificates
+        run: |
+          echo "$CERT_P12" | base64 --decode > cert.p12
+          echo "$MOBILEPROVISION" | base64 --decode > profile.mobileprovision
+
+      - name: Build IPA with Xcode
+        run: |
+          xcodebuild -workspace ios/App/App.xcworkspace \
+            -scheme App \
+            -archivePath output/App.xcarchive \
+            clean archive \
+            DEVELOPMENT_TEAM=J6MWBCBLW7 \
+            PROVISIONING_PROFILE_SPECIFIER="Shenbagaraj K"
+
+      - name: Export IPA
+        run: |
+          xcodebuild -exportArchive \
+            -archivePath output/App.xcarchive \
+            -exportOptionsPlist ios/App/exportOptions.plist \
+            -exportPath output
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v3
+        with:
+          name: ios-build
+          path: output/*.ipa
