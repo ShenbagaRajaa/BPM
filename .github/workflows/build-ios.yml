@@ -29,28 +29,27 @@ jobs:
         run: |
           echo "$CERT_P12" | base64 --decode > cert.p12
           echo "$MOBILEPROVISION" | base64 --decode > profile.mobileprovision
-      - name: Set up Xcode automatic signing
+
+      - name: Build & Archive IPA
         run: |
           xcodebuild -workspace ios/App/App.xcworkspace \
             -scheme App \
             -configuration Release \
-          CODE_SIGN_STYLE=Automatic \
-          DEVELOPMENT_TEAM=J6MWBCBLW7
-      - name: Build IPA with Xcode
-        run: |
-          xcodebuild -workspace ios/App/App.xcworkspace \
-            -scheme App \
             -archivePath output/App.xcarchive \
-            clean archive \
             DEVELOPMENT_TEAM=J6MWBCBLW7 \
-            PROVISIONING_PROFILE_SPECIFIER="Shenbagaraj K"
+            CODE_SIGN_STYLE=Automatic \
+            PROVISIONING_PROFILE_SPECIFIER="" \
+            PROVISIONING_PROFILE="" \
+            clean archive \
+            -allowProvisioningUpdates
 
       - name: Export IPA
         run: |
           xcodebuild -exportArchive \
             -archivePath output/App.xcarchive \
             -exportOptionsPlist ios/App/exportOptions.plist \
-            -exportPath output
+            -exportPath output \
+            -allowProvisioningUpdates
 
       - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4
