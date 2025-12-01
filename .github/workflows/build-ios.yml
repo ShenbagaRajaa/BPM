@@ -29,7 +29,13 @@ jobs:
         run: |
           echo "$CERT_P12" | base64 --decode > cert.p12
           echo "$MOBILEPROVISION" | base64 --decode > profile.mobileprovision
-
+      - name: Set up Xcode automatic signing
+        run: |
+          xcodebuild -workspace ios/App/App.xcworkspace \
+            -scheme App \
+            -configuration Release \
+          CODE_SIGN_STYLE=Automatic \
+          DEVELOPMENT_TEAM=<YOUR_TEAM_ID>
       - name: Build IPA with Xcode
         run: |
           xcodebuild -workspace ios/App/App.xcworkspace \
