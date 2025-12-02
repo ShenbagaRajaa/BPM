@@ -1,0 +1,27 @@
+name: Generate CSR
+
+on:
+  workflow_dispatch:
+
+jobs:
+  csr:
+    runs-on: macos-latest
+
+    steps:
+      - name: Create private key
+        run: |
+          openssl genrsa -out ios_distribution.key 2048
+
+      - name: Create CSR file
+        run: |
+          openssl req -new -key ios_distribution.key \
+            -out CertificateSigningRequest.certSigningRequest \
+            -subj "/emailAddress=shenbagaraj_k@trigent.com, CN=Shenbaga Raj K, C=IN"
+
+      - name: Upload CSR + Key
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-cert-files
+          path: |
+            ios_distribution.key
+            CertificateSigningRequest.certSigningRequest
