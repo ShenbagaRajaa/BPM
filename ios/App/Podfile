@@ -21,24 +21,20 @@ target 'App' do
 end
 
 post_install do |installer|
-  # Optional: Keep assertDeploymentTarget(installer) if it's a necessary function
-  # assertDeploymentTarget(installer) 
-  
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
-      # These build settings are NOT needed for frameworks and must be removed 
-      # to stop Xcode from looking for a profile.
+      
+      # 1. Clear application-specific settings (FIXES ERRORS) 🛑
       config.build_settings.delete('PROVISIONING_PROFILE_SPECIFIER')
       config.build_settings.delete('PROVISIONING_PROFILE')
       config.build_settings.delete('PRODUCT_BUNDLE_IDENTIFIER')
       
-      # Keep the manual signing style and identity settings consistent
+      # 2. Maintain manual signing identity (REQUIRED FOR CI) ✅
       config.build_settings['CODE_SIGN_STYLE'] = 'Manual'
       config.build_settings['DEVELOPMENT_TEAM'] = 'J6MWBCBLW7'
       config.build_settings['CODE_SIGN_IDENTITY'] = 'Apple Distribution'
       
-      # For Pod targets, which are generally frameworks, we often want to 
-      # disable the resource bundle generation if it's causing issues.
+      # 3. Optional: Consistency for previews/optimization
       config.build_settings['ENABLE_PREVIEWS'] = 'NO'
       config.build_settings['SWIFT_OPTIMIZATION_LEVEL'] = '-O'
     end
