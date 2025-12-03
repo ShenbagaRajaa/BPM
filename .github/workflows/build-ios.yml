@@ -41,6 +41,7 @@ jobs:
           security create-keychain -p "${{ secrets.KEYCHAIN_PASSWORD }}" build.keychain
           security unlock-keychain -p "${{ secrets.KEYCHAIN_PASSWORD }}" build.keychain
           security set-keychain-settings -lut 21600 build.keychain
+          security default-keychain -s build.keychain
 
       - name: Import certificate
         run: |
