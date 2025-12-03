@@ -25,124 +25,89 @@ jobs:
           npm run build
           npx cap sync ios
           
-      - name: Install Pods and Apply Post-Install Hook
+      - name: Install Pods
         run: |
           cd ios/App/
           pod install --repo-update
+
       # ---------------------------
       # Certificates & provisioning
       # ---------------------------
           
-      - name: Decode certificate
+      - name: Decode and import certificate
         run: |
           echo "${{ secrets.CERT_P12 }}" | base64 --decode > ios_distribution.p12
-      - name: Validate p12
-        run: |
-          openssl pkcs12 -info -in ios_distribution.p12 -nokeys -passin pass:"${{ secrets.CERT_P12_PASSWORD }}" || true
-
-      - name: Setup keychain
-        run: |
+          
           security create-keychain -p "${{ secrets.KEYCHAIN_PASSWORD }}" build.keychain
           security unlock-keychain -p "${{ secrets.KEYCHAIN_PASSWORD }}" build.keychain
           security set-keychain-settings -lut 21600 build.keychain
           security default-keychain -s build.keychain
-
-      - name: Import certificate
-        run: |
+          
           security import ios_distribution.p12 \
-          -k build.keychain \
-          -f pkcs12 \
-          -P "${{ secrets.CERT_P12_PASSWORD }}" \
-          -A
-          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "${{ secrets.KEYCHAIN_PASSWORD }}" build.keychain
-
-      - name: Debug secret
-        run: |
-          if [ -z "$PROFILE_BASE64" ]; then
-            echo "ERROR: PROFILE_BASE64 is empty!"
-          else
-            echo "PROFILE_BASE64 length: ${#PROFILE_BASE64}"
-            echo "First 100 chars: ${PROFILE_BASE64:0:100}"
-          fi
-        env:
-          PROFILE_BASE64: ${{ secrets.PROFILE_BASE64 }}
+            -k build.keychain \
+            -f pkcs12 \
+            -P "${{ secrets.CERT_P12_PASSWORD }}" \
+            -A
+          
+          security set-key-partition-list -S apple-tool:,apple:,codesign: \
+            -s -k "${{ secrets.KEYCHAIN_PASSWORD }}" build.keychain
 
       - name: Install provisioning profile
         env:
           PROFILE_BASE64: ${{ secrets.PROFILE_BASE64 }}
         run: |
           if [ -z "$PROFILE_BASE64" ]; then
-            echo "ERROR: PROFILE_BASE64 secret is not set or is empty"
+            echo "ERROR: PROFILE_BASE64 secret is not set"
             exit 1
           fi
+          
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          echo "$PROFILE_BASE64" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/iOS_Test.mobileprovision
-          if [ ! -f ~/Library/MobileDevice/Provisioning\ Profiles/iOS_Test.mobileprovision ]; then
-            echo "ERROR: Profile file was not created"
-            exit 1
-          fi
-          FILE_SIZE=$(wc -c < ~/Library/MobileDevice/Provisioning\ Profiles/iOS_Test.mobileprovision)
-          echo "Profile file size: $FILE_SIZE bytes"
-    
-          if [ "$FILE_SIZE" -lt 100 ]; then
-            echo "ERROR: Profile file is too small, likely corrupted"
-            cat ~/Library/MobileDevice/Provisioning\ Profiles/iOS_Test.mobileprovision
-            exit 1
-          fi
-      # - name: Install provisioning profile
-      #   env:
-      #     PROFILE_BASE64: ${{ secrets.PROFILE_BASE64 }}
-      #     run: |
-      #       mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-      #       echo "$PROFILE_BASE64" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/iOS_Test.mobileprovision
-      
-      - name: Debug provisioning profile
+          
+          # Decode to temporary location
+          echo "$PROFILE_BASE64" | base64 --decode > /tmp/profile.mobileprovision
+          
+          # Extract UUID from profile
+          PROFILE_UUID=$(security cms -D -i /tmp/profile.mobileprovision | grep -A 1 "<key>UUID</key>" | grep "<string>" | sed 's/.*<string>\(.*\)<\/string>.*/\1/')
+          
+          echo "Profile UUID: $PROFILE_UUID"
+          echo "PROFILE_UUID=$PROFILE_UUID" >> $GITHUB_ENV
+          
+          # Move profile with UUID as filename
+          mv /tmp/profile.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/${PROFILE_UUID}.mobileprovision
+          
+          echo "✅ Provisioning profile installed"
+
+      - name: Verify setup
         run: |
+          echo "🔍 Checking code signing identity..."
+          security find-identity -p codesigning -v
+          
+          echo ""
+          echo "🔍 Checking provisioning profile..."
           ls -lh ~/Library/MobileDevice/Provisioning\ Profiles/
-          file ~/Library/MobileDevice/Provisioning\ Profiles/iOS_Test.mobileprovision
-          head -c 100 ~/Library/MobileDevice/Provisioning\ Profiles/iOS_Test.mobileprovision | xxd
-
-      - name: Verify provisioning profile
-        run: |
-          security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/iOS_Test.mobileprovision \
-          | grep -A 10 -E "(Name|UUID|ApplicationIdentifier|TeamIdentifier|ProvisionedDevices|Entitlements)"
-
-          # security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/iOS_Test.mobileprovision | grep -A 2 UUID
-          # security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/iOS_Test.mobileprovision | grep Name
-
-      - name: Show installed code signing identities
-        run: security find-identity -p codesigning -v
-
-      - name: List provisioning profiles
-        run: |
-          ls -lh ~/Library/MobileDevice/Provisioning\ Profiles/
-          file ~/Library/MobileDevice/Provisioning\ Profiles/iOS_Test.mobileprovision
-          security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/iOS_Test.mobileprovision | grep -A 2 UUID
+          
+          echo ""
+          echo "📋 Profile details:"
+          security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/${PROFILE_UUID}.mobileprovision | grep -E "(Name|UUID|ApplicationIdentifierPrefix|application-identifier)" | head -10
 
       # ---------------------------
       # Build IPA
       # ---------------------------
-      - name: Build IPA with Xcode
+      - name: Build and Archive
         run: |
-          # xcodebuild archive \
-          # -workspace ios/App/App.xcworkspace \
-          # -scheme App \
-          # -configuration Release \
-          # -archivePath output/App.xcarchive \
-          # -destination generic/platform=iOS \
-          # -xcconfig ios/App/App.xcconfig
           xcodebuild clean -workspace ios/App/App.xcworkspace -scheme App -configuration Release
+          
           xcodebuild archive \
-          -workspace ios/App/App.xcworkspace \
-          -scheme App \
-          -configuration Release \
-          -archivePath output/App.xcarchive \
-          -destination generic/platform=iOS \
-          # -xcconfig ios/App/App.xcconfig
-          CODE_SIGN_IDENTITY="Apple Distribution" \
-          CODE_SIGN_STYLE=Manual \
-          DEVELOPMENT_TEAM=J6MWBCBLW7 \
-          PROVISIONING_PROFILE_SPECIFIER=iOS_Test
+            -workspace ios/App/App.xcworkspace \
+            -scheme App \
+            -configuration Release \
+            -archivePath output/App.xcarchive \
+            -destination 'generic/platform=iOS' \
+            CODE_SIGN_STYLE=Manual \
+            CODE_SIGN_IDENTITY="Apple Distribution" \
+            DEVELOPMENT_TEAM=J6MWBCBLW7 \
+            PROVISIONING_PROFILE_SPECIFIER="${PROFILE_UUID}" \
+            PRODUCT_BUNDLE_IDENTIFIER=com.bpmgr.app
           
       - name: Export IPA
         run: |
