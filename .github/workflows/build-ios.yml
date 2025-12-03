@@ -116,11 +116,12 @@ jobs:
             -scheme App \
             -configuration Release \
             -archivePath output/App.xcarchive \
+            -destination generic/platform=iOS \
             DEVELOPMENT_TEAM=J6MWBCBLW7 \
             PROVISIONING_PROFILE_SPECIFIER="iOS_Test" \
             PRODUCT_BUNDLE_IDENTIFIER=com.bpmgr.app \
             CODE_SIGN_STYLE=Manual \
-            CODE_SIGN_IDENTITY="Apple Distribution"
+            CODE_SIGN_IDENTITY="iOS Distribution"
             -allowProvisioningUpdates
 
       - name: Export IPA
