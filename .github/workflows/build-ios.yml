@@ -56,12 +56,6 @@ jobs:
       #     mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
       #     echo "$PROFILE_BASE64" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/iOS_Test.mobileprovision
 
-      - name: Debug provisioning profile
-        run: |
-          ls -lh ~/Library/MobileDevice/Provisioning\ Profiles/
-          file ~/Library/MobileDevice/Provisioning\ Profiles/iOS_Test.mobileprovision
-          head -c 100 ~/Library/MobileDevice/Provisioning\ Profiles/iOS_Test.mobileprovision | xxd
-
       - name: Debug secret
         run: |
           if [ -z "$PROFILE_BASE64" ]; then
@@ -101,6 +95,13 @@ jobs:
       #     run: |
       #       mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
       #       echo "$PROFILE_BASE64" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/iOS_Test.mobileprovision
+      
+      - name: Debug provisioning profile
+        run: |
+          ls -lh ~/Library/MobileDevice/Provisioning\ Profiles/
+          file ~/Library/MobileDevice/Provisioning\ Profiles/iOS_Test.mobileprovision
+          head -c 100 ~/Library/MobileDevice/Provisioning\ Profiles/iOS_Test.mobileprovision | xxd
+
       - name: Verify provisioning profile
         run: |
           security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/iOS_Test.mobileprovision | grep -A 2 UUID
