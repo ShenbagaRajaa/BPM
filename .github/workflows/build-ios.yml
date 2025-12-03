@@ -28,9 +28,17 @@ jobs:
       # ---------------------------
       # Certificates & provisioning
       # ---------------------------
+      - name: Debug p12
+        run: |
+          echo "$CERT_P12" | base64 --decode > test.p12
+          file test.p12
+          
       - name: Decode certificate
         run: |
           echo "${{ secrets.CERT_P12_BASE64 }}" | base64 --decode > ios_distribution.p12
+      - name: Validate p12
+        run: |
+          openssl pkcs12 -info -in ios_distribution.p12 -nokeys -passin pass:"${{ secrets.CERT_P12_PASSWORD }}" || true
 
       - name: Setup keychain
         run: |
@@ -41,11 +49,11 @@ jobs:
       - name: Import certificate
         run: |
           security import ios_distribution.p12 \
-            -k build.keychain \
-            -f pkcs12 \
-            -P "${{ secrets.CERT_P12_PASSWORD }}" \
-            -A -T /usr/bin/codesign -T /usr/bin/security
-          security list-keychains -s build.keychain
+          -k build.keychain \
+          -f pkcs12 \
+          -P "${{ secrets.CERT_P12_PASSWORD }}" \
+          -A
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "${{ secrets.KEYCHAIN_PASSWORD }}" build.keychain
 
       - name: Install provisioning profile
         run: |
