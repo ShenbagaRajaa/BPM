@@ -103,6 +103,7 @@ jobs:
       - name: Verify provisioning profile
         run: |
           security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/iOS_Test.mobileprovision | grep -A 2 UUID
+          security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/iOS_Test.mobileprovision | grep Name
 
       - name: Show installed code signing identities
         run: security find-identity -p codesigning -v
