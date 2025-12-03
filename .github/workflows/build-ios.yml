@@ -116,13 +116,17 @@ jobs:
       #     -configuration Release \
       #     -archivePath output/App.xcarchive \
       #     -destination generic/platform=iOS \
-      #     ONLY_ACTIVE_ARCH=NO \
-      #     CODE_SIGN_IDENTITY="iOS Distribution" \
-      #     CODE_SIGN_STYLE=Manual \
       #     DEVELOPMENT_TEAM=J6MWBCBLW7 \
-      #     PROVISIONING_PROFILE_SPECIFIER="iOS_Test" \
-      #     OTHER_CODE_SIGN_FLAGS="--preserve-metadata=entitlements" \
-      #     "CODE_SIGNING_REQUIRED=NO"
+      #     CODE_SIGN_STYLE=Manual \
+      #     PRODUCT_BUNDLE_IDENTIFIER=com.bpmgr.app
+      #     CODE_SIGN_IDENTITY="Apple Distribution" \
+      #     PROVISIONING_PROFILE_SPECIFIER="iOS_Test"
+      - name: List provisioning profiles
+        run: |
+          ls -lh ~/Library/MobileDevice/Provisioning\ Profiles/
+          file ~/Library/MobileDevice/Provisioning\ Profiles/iOS_Test.mobileprovision
+          security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/iOS_Test.mobileprovision | grep -A 2 UUID
+
       - name: Build IPA with Xcode
         run: |
           xcodebuild archive \
@@ -133,9 +137,9 @@ jobs:
           -destination generic/platform=iOS \
           DEVELOPMENT_TEAM=J6MWBCBLW7 \
           CODE_SIGN_STYLE=Manual \
-          PRODUCT_BUNDLE_IDENTIFIER=com.bpmgr.app
           CODE_SIGN_IDENTITY="Apple Distribution" \
           PROVISIONING_PROFILE_SPECIFIER="iOS_Test"
+
 
 
 
