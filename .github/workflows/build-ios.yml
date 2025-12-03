@@ -24,7 +24,9 @@ jobs:
         run: |
           npm run build
           npx cap sync ios
-
+      - name: Force manual signing for Pods
+        run: |
+          find ios/App/Pods -name '*.xcconfig' -exec sed -i '' 's/CODE_SIGN_STYLE = Automatic/CODE_SIGN_STYLE = Manual/g' {} \;
       # ---------------------------
       # Certificates & provisioning
       # ---------------------------
