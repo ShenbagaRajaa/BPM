@@ -138,7 +138,11 @@ jobs:
           -configuration Release \
           -archivePath output/App.xcarchive \
           -destination generic/platform=iOS \
-          -xcconfig ios/App/App.xcconfig
+          # -xcconfig ios/App/App.xcconfig
+          CODE_SIGN_IDENTITY="Apple Distribution" \
+          CODE_SIGN_STYLE=Manual \
+          DEVELOPMENT_TEAM=J6MWBCBLW7 \
+          PROVISIONING_PROFILE_SPECIFIER=iOS_Test
           
       - name: Export IPA
         run: |
