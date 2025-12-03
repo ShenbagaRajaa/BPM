@@ -28,19 +28,24 @@ jobs:
       # ---------------------------
       # Certificates & provisioning
       # ---------------------------
-      - name: Decode certificates
+      - name: Decode certificate
         run: |
-          echo "$CERT_P12" | base64 --decode > cert.p12
-          echo "$MOBILEPROVISION" | base64 --decode > profile.mobileprovision
+          echo "${{ secrets.CERT_P12_BASE64 }}" | base64 --decode > ios_distribution.p12
 
-      - name: Install certificate
+      - name: Setup keychain
         run: |
-          security create-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
-          security unlock-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
+          security create-keychain -p "${{ secrets.KEYCHAIN_PASSWORD }}" build.keychain
+          security unlock-keychain -p "${{ secrets.KEYCHAIN_PASSWORD }}" build.keychain
           security set-keychain-settings -lut 21600 build.keychain
-          security import cert.p12 -k build.keychain -P "$CERT_P12_PASSWORD" -A -T /usr/bin/codesign
-          security default-keychain -s build.keychain
 
+      - name: Import certificate
+        run: |
+          security import ios_distribution.p12 \
+            -k build.keychain \
+            -f pkcs12 \
+            -P "${{ secrets.CERT_P12_PASSWORD }}" \
+            -A -T /usr/bin/codesign -T /usr/bin/security
+          security list-keychains -s build.keychain
 
       - name: Install provisioning profile
         run: |
