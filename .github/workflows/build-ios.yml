@@ -35,7 +35,7 @@ jobs:
           
       - name: Decode certificate
         run: |
-          echo "${{ secrets.CERT_P12_BASE64 }}" | base64 --decode > ios_distribution.p12
+          echo "${{ secrets.CERT_P12 }}" | base64 --decode > ios_distribution.p12
       - name: Validate p12
         run: |
           openssl pkcs12 -info -in ios_distribution.p12 -nokeys -passin pass:"${{ secrets.CERT_P12_PASSWORD }}" || true
@@ -71,7 +71,7 @@ jobs:
             -configuration Release \
             -archivePath output/App.xcarchive \
             DEVELOPMENT_TEAM=J6MWBCBLW7 \
-            PROVISIONING_PROFILE_SPECIFIER="Shenbagaraj K" \
+            PROVISIONING_PROFILE_SPECIFIER="BPMGR_PROV" \
             PRODUCT_BUNDLE_IDENTIFIER=com.bpmgr.app \
             CODE_SIGN_STYLE=Manual \
             -allowProvisioningUpdates
