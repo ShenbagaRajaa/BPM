@@ -28,10 +28,6 @@ jobs:
       # ---------------------------
       # Certificates & provisioning
       # ---------------------------
-      - name: Debug p12
-        run: |
-          echo "$CERT_P12" | base64 --decode > ios_distribution.p12
-          file ios_distribution.p12
           
       - name: Decode certificate
         run: |
@@ -71,7 +67,7 @@ jobs:
             -configuration Release \
             -archivePath output/App.xcarchive \
             DEVELOPMENT_TEAM=J6MWBCBLW7 \
-            PROVISIONING_PROFILE_SPECIFIER="BPMGR_PROV.mobileprovision" \
+            PROVISIONING_PROFILE_SPECIFIER="BPMGR PROV" \
             PRODUCT_BUNDLE_IDENTIFIER=com.bpmgr.app \
             CODE_SIGN_STYLE=Manual \
             -allowProvisioningUpdates
