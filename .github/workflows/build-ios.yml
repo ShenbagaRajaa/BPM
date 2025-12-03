@@ -105,28 +105,19 @@ jobs:
       - name: Show installed code signing identities
         run: security find-identity -p codesigning -v
 
-      # ---------------------------
-      # Build IPA
-      # ---------------------------
-      # - name: Build IPA with Xcode
-      #   run: |
-      #     xcodebuild archive \
-      #     -workspace ios/App/App.xcworkspace \
-      #     -scheme App \
-      #     -configuration Release \
-      #     -archivePath output/App.xcarchive \
-      #     -destination generic/platform=iOS \
-      #     DEVELOPMENT_TEAM=J6MWBCBLW7 \
-      #     CODE_SIGN_STYLE=Manual \
-      #     PRODUCT_BUNDLE_IDENTIFIER=com.bpmgr.app
-      #     CODE_SIGN_IDENTITY="Apple Distribution" \
-      #     PROVISIONING_PROFILE_SPECIFIER="iOS_Test"
       - name: List provisioning profiles
         run: |
           ls -lh ~/Library/MobileDevice/Provisioning\ Profiles/
           file ~/Library/MobileDevice/Provisioning\ Profiles/iOS_Test.mobileprovision
           security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/iOS_Test.mobileprovision | grep -A 2 UUID
 
+      - name: Force manual signing for Pods
+        run: |
+          find ios/App/Pods -name '*.xcconfig' -exec sed -i '' 's/CODE_SIGN_STYLE = Automatic/CODE_SIGN_STYLE = Manual/g' {} \;
+
+      # ---------------------------
+      # Build IPA
+      # ---------------------------
       - name: Build IPA with Xcode
         run: |
           xcodebuild archive \
@@ -135,17 +126,12 @@ jobs:
           -configuration Release \
           -archivePath output/App.xcarchive \
           -destination generic/platform=iOS \
-          -xcconfig ios/App/App.xcconfig \
-          -allowProvisioningUpdates
+          DEVELOPMENT_TEAM=J6MWBCBLW7 \
+          CODE_SIGN_STYLE=Manual \
+          # PRODUCT_BUNDLE_IDENTIFIER=com.bpmgr.app
+          CODE_SIGN_IDENTITY="Apple Distribution" \
+          PROVISIONING_PROFILE_SPECIFIER="iOS_Test"
 
-
-
-      # - name: Export IPA
-      #   run: |
-      #     xcodebuild -exportArchive \
-      #       -archivePath output/App.xcarchive \
-      #       -exportOptionsPlist ios/App/exportOptions.plist \
-      #       -exportPath output
       - name: Export IPA
         run: |
           xcodebuild -exportArchive \
