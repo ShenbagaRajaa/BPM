@@ -24,25 +24,73 @@ jobs:
         run: |
           npm run build
           npx cap sync ios
+
+      # ---------------------------
+      # Update Podfile
+      # ---------------------------
+      - name: Update Podfile to disable Pod code signing
+        run: |
+          cat > ios/App/Podfile << 'EOF'
+          require_relative '../../node_modules/@capacitor/ios/scripts/pods_helpers'
           
+          platform :ios, '14.0'
+          use_frameworks!
+          
+          install! 'cocoapods', :disable_input_output_paths => true
+          
+          def capacitor_pods
+            pod 'Capacitor', :path => '../../node_modules/@capacitor/ios'
+            pod 'CapacitorCordova', :path => '../../node_modules/@capacitor/ios'
+            pod 'CapacitorApp', :path => '../../node_modules/@capacitor/app'
+            pod 'CapacitorBrowser', :path => '../../node_modules/@capacitor/browser'
+          end
+          
+          target 'App' do
+            capacitor_pods
+          end
+          
+          post_install do |installer|
+            installer.pods_project.targets.each do |target|
+              target.build_configurations.each do |config|
+                # Disable code signing for all Pod targets
+                config.build_settings['CODE_SIGN_IDENTITY'] = ''
+                config.build_settings['CODE_SIGNING_REQUIRED'] = 'NO'
+                config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
+                config.build_settings['EXPANDED_CODE_SIGN_IDENTITY'] = ''
+                
+                # Clear provisioning profiles
+                config.build_settings.delete('PROVISIONING_PROFILE_SPECIFIER')
+                config.build_settings.delete('PROVISIONING_PROFILE')
+                config.build_settings.delete('PRODUCT_BUNDLE_IDENTIFIER')
+                
+                # Optional: Disable previews
+                config.build_settings['ENABLE_PREVIEWS'] = 'NO'
+                config.build_settings['SWIFT_OPTIMIZATION_LEVEL'] = '-O'
+              end
+            end
+          end
+          EOF
+
       - name: Install Pods
         run: |
           cd ios/App/
           pod install --repo-update
 
       # ---------------------------
-      # Certificates & provisioning
+      # Certificates & Provisioning
       # ---------------------------
-          
-      - name: Decode and import certificate
+      - name: Setup Keychain and Import Certificate
         run: |
+          # Decode certificate
           echo "${{ secrets.CERT_P12 }}" | base64 --decode > ios_distribution.p12
           
+          # Create keychain
           security create-keychain -p "${{ secrets.KEYCHAIN_PASSWORD }}" build.keychain
           security unlock-keychain -p "${{ secrets.KEYCHAIN_PASSWORD }}" build.keychain
           security set-keychain-settings -lut 21600 build.keychain
           security default-keychain -s build.keychain
           
+          # Import certificate
           security import ios_distribution.p12 \
             -k build.keychain \
             -f pkcs12 \
@@ -52,21 +100,17 @@ jobs:
           security set-key-partition-list -S apple-tool:,apple:,codesign: \
             -s -k "${{ secrets.KEYCHAIN_PASSWORD }}" build.keychain
 
-      - name: Install provisioning profile
+      - name: Install Provisioning Profile
         env:
           PROFILE_BASE64: ${{ secrets.PROFILE_BASE64 }}
         run: |
-          if [ -z "$PROFILE_BASE64" ]; then
-            echo "ERROR: PROFILE_BASE64 secret is not set"
-            exit 1
-          fi
-          
+          # Create provisioning profiles directory
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           
           # Decode to temporary location
           echo "$PROFILE_BASE64" | base64 --decode > /tmp/profile.mobileprovision
           
-          # Extract UUID from profile
+          # Extract UUID
           PROFILE_UUID=$(security cms -D -i /tmp/profile.mobileprovision | grep -A 1 "<key>UUID</key>" | grep "<string>" | sed 's/.*<string>\(.*\)<\/string>.*/\1/')
           
           echo "Profile UUID: $PROFILE_UUID"
@@ -77,47 +121,76 @@ jobs:
           
           echo "✅ Provisioning profile installed"
 
-      - name: Verify setup
+      - name: Verify Code Signing Setup
         run: |
-          echo "🔍 Checking code signing identity..."
+          echo "📋 Code Signing Identities:"
           security find-identity -p codesigning -v
           
           echo ""
-          echo "🔍 Checking provisioning profile..."
+          echo "📋 Provisioning Profiles:"
           ls -lh ~/Library/MobileDevice/Provisioning\ Profiles/
           
           echo ""
-          echo "📋 Profile details:"
-          security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/${PROFILE_UUID}.mobileprovision | grep -E "(Name|UUID|ApplicationIdentifierPrefix|application-identifier)" | head -10
+          echo "📋 Profile UUID: ${PROFILE_UUID}"
 
       # ---------------------------
-      # Build IPA
+      # Build & Archive
       # ---------------------------
-      - name: Build and Archive
+      - name: Build and Archive IPA
         run: |
           xcodebuild clean \
-          -workspace ios/App/App.xcworkspace \
-          -scheme App \
-          -configuration Release
-  
-          cd ios/App && pod install && cd ../..
-    
-          xcodebuild archive \
-          -workspace ios/App/App.xcworkspace \
-          -scheme App \
-          -configuration Release \
-          -archivePath output/App.xcarchive \
-          -destination 'generic/platform=iOS'
+            -workspace ios/App/App.xcworkspace \
+            -scheme App \
+            -configuration Release
           
+          xcodebuild archive \
+            -workspace ios/App/App.xcworkspace \
+            -scheme App \
+            -configuration Release \
+            -archivePath output/App.xcarchive \
+            -destination 'generic/platform=iOS' \
+            -allowProvisioningUpdates \
+            DEVELOPMENT_TEAM=J6MWBCBLW7 \
+            PROVISIONING_PROFILE_SPECIFIER="${PROFILE_UUID}"
+
+      - name: Create exportOptions.plist
+        run: |
+          cat > exportOptions.plist << EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>method</key>
+              <string>ad-hoc</string>
+              <key>teamID</key>
+              <string>J6MWBCBLW7</string>
+              <key>signingStyle</key>
+              <string>manual</string>
+              <key>provisioningProfiles</key>
+              <dict>
+                  <key>com.bpmgr.app</key>
+                  <string>${PROFILE_UUID}</string>
+              </dict>
+          </dict>
+          </plist>
+          EOF
+
       - name: Export IPA
         run: |
           xcodebuild -exportArchive \
             -archivePath output/App.xcarchive \
-            -exportOptionsPlist ios/App/exportOptions.plist \
-            -exportPath output
+            -exportOptionsPlist exportOptions.plist \
+            -exportPath output \
+            -allowProvisioningUpdates
 
       - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4
         with:
           name: ios-build
           path: output/*.ipa
+
+      - name: List output files
+        if: always()
+        run: |
+          echo "📦 Build outputs:"
+          ls -lah output/ || echo "No output directory"
