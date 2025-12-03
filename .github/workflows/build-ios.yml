@@ -54,7 +54,7 @@ jobs:
       - name: Install provisioning profile
         run: |
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          echo "$PROFILE_BASE64" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/BPMGR_PROV.mobileprovision
+          echo "$PROFILE_BASE64" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/iOS_Test.mobileprovision
 
       # ---------------------------
       # Build IPA
@@ -67,7 +67,7 @@ jobs:
             -configuration Release \
             -archivePath output/App.xcarchive \
             DEVELOPMENT_TEAM=J6MWBCBLW7 \
-            PROVISIONING_PROFILE_SPECIFIER="BPMGR PROV" \
+            PROVISIONING_PROFILE_SPECIFIER="iOS_Test" \
             PRODUCT_BUNDLE_IDENTIFIER=com.bpmgr.app \
             CODE_SIGN_STYLE=Manual \
             -allowProvisioningUpdates
