@@ -135,7 +135,7 @@ jobs:
           -configuration Release \
           -archivePath output/App.xcarchive \
           -destination generic/platform=iOS \
-          -xcconfig ios/App/App.xcconfig
+          -xcconfig ios/App/App.xcconfig \
           -allowProvisioningUpdates
 
 
