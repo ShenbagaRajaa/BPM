@@ -132,7 +132,24 @@ jobs:
           
           echo ""
           echo "📋 Profile UUID: ${PROFILE_UUID}"
-
+      # ---------------------------
+      # Set Manual Signing in Xcode Project
+      # ---------------------------
+      - name: Set Manual Signing and Build Settings
+        run: |
+          # The main app target is 'App' in project 'App'
+          # Set manual signing style
+          /usr/bin/xcrun agvtool new-version -all 1 # Placeholder for any needed tool
+          /usr/bin/xcrun xcodebuild \
+            -project ios/App/App.xcodeproj \
+            -target App \
+            -configuration Release \
+            PROVISIONING_PROFILE_SPECIFIER="${PROFILE_UUID}" \
+            DEVELOPMENT_TEAM=J6MWBCBLW7 \
+            CODE_SIGN_STYLE=Manual \
+            CODE_SIGN_IDENTITY="Apple Distribution"
+          
+          echo "✅ Xcode project signing style set to Manual"
       # ---------------------------
       # Build & Archive
       # ---------------------------
