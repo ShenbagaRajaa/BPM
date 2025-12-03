@@ -71,7 +71,7 @@ jobs:
             -configuration Release \
             -archivePath output/App.xcarchive \
             DEVELOPMENT_TEAM=J6MWBCBLW7 \
-            PROVISIONING_PROFILE_SPECIFIER="BPMGR_PROV" \
+            PROVISIONING_PROFILE_SPECIFIER="BPMGR_PROV.mobileprovision" \
             PRODUCT_BUNDLE_IDENTIFIER=com.bpmgr.app \
             CODE_SIGN_STYLE=Manual \
             -allowProvisioningUpdates
