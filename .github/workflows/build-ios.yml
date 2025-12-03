@@ -51,17 +51,17 @@ jobs:
           -A
           security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "${{ secrets.KEYCHAIN_PASSWORD }}" build.keychain
 
-      # - name: Install provisioning profile
-      #   run: |
-      #     mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-      #     echo "$PROFILE_BASE64" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/iOS_Test.mobileprovision
-      
       - name: Install provisioning profile
-        env:
-          PROFILE_BASE64: ${{ secrets.PROFILE_BASE64 }}
-          run: |
-            mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-            echo "$PROFILE_BASE64" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/iOS_Test.mobileprovision
+        run: |
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          echo "$PROFILE_BASE64" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/iOS_Test.mobileprovision
+      
+      # - name: Install provisioning profile
+      #   env:
+      #     PROFILE_BASE64: ${{ secrets.PROFILE_BASE64 }}
+      #     run: |
+      #       mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+      #       echo "$PROFILE_BASE64" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/iOS_Test.mobileprovision
       - name: Verify provisioning profile
         run: |
           security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/iOS_Test.mobileprovision | grep -A 2 UUID
