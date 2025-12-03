@@ -127,7 +127,7 @@ jobs:
           # -archivePath output/App.xcarchive \
           # -destination generic/platform=iOS \
           # -xcconfig ios/App/App.xcconfig
-          xcodebuild clean -workspace ios/App/App.xcworkspace -configuration Release
+          xcodebuild clean -workspace ios/App/App.xcworkspace -scheme App -configuration Release
           xcodebuild archive \
           -workspace ios/App/App.xcworkspace \
           -scheme App \
