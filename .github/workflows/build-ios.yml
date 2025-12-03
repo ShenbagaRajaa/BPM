@@ -126,7 +126,7 @@ jobs:
           -configuration Release \
           -archivePath output/App.xcarchive \
           -destination generic/platform=iOS \
-          -xcconfig ios/App/AppSigning.xcconfig
+          -xcconfig ios/App/App.xcconfig
 
       - name: Export IPA
         run: |
