@@ -95,19 +95,19 @@ jobs:
       # ---------------------------
       - name: Build and Archive
         run: |
-          xcodebuild clean -workspace ios/App/App.xcworkspace -scheme App -configuration Release
-          
+          xcodebuild clean \
+          -workspace ios/App/App.xcworkspace \
+          -scheme App \
+          -configuration Release
+  
+          cd ios/App && pod install && cd ../..
+    
           xcodebuild archive \
-            -workspace ios/App/App.xcworkspace \
-            -scheme App \
-            -configuration Release \
-            -archivePath output/App.xcarchive \
-            -destination 'generic/platform=iOS' \
-            CODE_SIGN_STYLE=Manual \
-            CODE_SIGN_IDENTITY="Apple Distribution" \
-            DEVELOPMENT_TEAM=J6MWBCBLW7 \
-            PROVISIONING_PROFILE_SPECIFIER="${PROFILE_UUID}" \
-            PRODUCT_BUNDLE_IDENTIFIER=com.bpmgr.app
+          -workspace ios/App/App.xcworkspace \
+          -scheme App \
+          -configuration Release \
+          -archivePath output/App.xcarchive \
+          -destination 'generic/platform=iOS'
           
       - name: Export IPA
         run: |
