@@ -30,8 +30,8 @@ jobs:
       # ---------------------------
       - name: Debug p12
         run: |
-          echo "$CERT_P12" | base64 --decode > test.p12
-          file test.p12
+          echo "$CERT_P12" | base64 --decode > ios_distribution.p12
+          file ios_distribution.p12
           
       - name: Decode certificate
         run: |
