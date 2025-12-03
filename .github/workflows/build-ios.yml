@@ -132,17 +132,16 @@ jobs:
           
           echo ""
           echo "📋 Profile UUID: ${PROFILE_UUID}"
-      # ---------------------------
-      # Set Manual Signing and Build Settings
+     # ---------------------------
+      # Set Manual Signing and Build Settings (Using Workspace)
       # ---------------------------
       - name: Set Manual Signing and Build Settings
         run: |
           echo "Setting Code Signing Style to Manual for App target..."
-          # The command should use the WORKSPACE path for consistency with the archive command
-          # We use -project to modify the *target's* build settings (less ambiguous)
+          # NOTE: We must use the WORKSPACE and SCHEME so the build can see Pods dependencies
           /usr/bin/xcrun xcodebuild \
-            -project ios/App/App.xcodeproj \
-            -target App \
+            -workspace ios/App/App.xcworkspace \
+            -scheme App \
             -configuration Release \
             CODE_SIGN_STYLE=Manual \
             CODE_SIGN_IDENTITY="Apple Distribution" \
