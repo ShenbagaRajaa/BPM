@@ -51,14 +51,14 @@ jobs:
           -A
           security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "${{ secrets.KEYCHAIN_PASSWORD }}" build.keychain
 
-      - name: Import signing certificate
-        run: |
-          echo "$CERT_P12" | base64 --decode > certificate.p12
-          security create-keychain -p "" build.keychain
-          security import certificate.p12 -k build.keychain -P "$CERT_PASSWORD" -A
-          security list-keychains -d user -s build.keychain
-          security default-keychain -d user -s build.keychain
-          security unlock-keychain -p "" build.keychain
+      # - name: Import signing certificate
+      #   run: |
+      #     echo "$CERT_P12" | base64 --decode > certificate.p12
+      #     security create-keychain -p "" build.keychain
+      #     security import certificate.p12 -k build.keychain -P "$CERT_PASSWORD" -A
+      #     security list-keychains -d user -s build.keychain
+      #     security default-keychain -d user -s build.keychain
+      #     security unlock-keychain -p "" build.keychain
 
       # - name: Install provisioning profile
       #   run: |
