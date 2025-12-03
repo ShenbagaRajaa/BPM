@@ -1,0 +1,2 @@
+// ios/App/Pods.xcconfig
+CODE_SIGN_STYLE = Automatic
