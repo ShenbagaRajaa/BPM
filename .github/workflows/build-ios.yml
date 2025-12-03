@@ -108,21 +108,36 @@ jobs:
       
       # ---------------------------
       # Build IPA
-      # ---------------------------
+      # # ---------------------------
+      # - name: Build IPA with Xcode
+      #   run: |
+      #     xcodebuild archive \
+      #       -workspace ios/App/App.xcworkspace \
+      #       -scheme App \
+      #       -configuration Release \
+      #       -archivePath output/App.xcarchive \
+      #       -destination generic/platform=iOS \
+      #       DEVELOPMENT_TEAM=J6MWBCBLW7 \
+      #       PROVISIONING_PROFILE_SPECIFIER="iOS_Test" \
+      #       PRODUCT_BUNDLE_IDENTIFIER=com.bpmgr.app \
+      #       CODE_SIGN_STYLE=Manual \
+      #       CODE_SIGN_IDENTITY="iOS Distribution"
+      #       -allowProvisioningUpdates
       - name: Build IPA with Xcode
         run: |
           xcodebuild archive \
-            -workspace ios/App/App.xcworkspace \
-            -scheme App \
-            -configuration Release \
-            -archivePath output/App.xcarchive \
-            -destination generic/platform=iOS \
-            DEVELOPMENT_TEAM=J6MWBCBLW7 \
-            PROVISIONING_PROFILE_SPECIFIER="iOS_Test" \
-            PRODUCT_BUNDLE_IDENTIFIER=com.bpmgr.app \
-            CODE_SIGN_STYLE=Manual \
-            CODE_SIGN_IDENTITY="iOS Distribution"
-            -allowProvisioningUpdates
+          -workspace ios/App/App.xcworkspace \
+          -scheme App \
+          -configuration Release \
+          -archivePath output/App.xcarchive \
+          -destination generic/platform=iOS \
+          ONLY_ACTIVE_ARCH=NO \
+          CODE_SIGN_IDENTITY="iOS Distribution" \
+          CODE_SIGN_STYLE=Manual \
+          DEVELOPMENT_TEAM=J6MWBCBLW7 \
+          PROVISIONING_PROFILE_SPECIFIER="iOS_Test" \
+          EXCLUDED_TARGETS="Pods-App Capacitor CapacitorApp CapacitorBrowser CapacitorCordova"
+
 
       - name: Export IPA
         run: |
