@@ -35,11 +35,12 @@ jobs:
 
       - name: Install certificate
         run: |
-          security create-keychain -p "" build.keychain
-          security import cert.p12 -k build.keychain -P "$CERT_P12_PASSWORD" -A
+          security create-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
+          security set-keychain-settings -lut 21600 build.keychain
+          security import cert.p12 -k build.keychain -P "$CERT_P12_PASSWORD" -A -T /usr/bin/codesign
           security default-keychain -s build.keychain
-          security unlock-keychain -p "" build.keychain
-          security set-keychain-settings -lu build.keychain
+
 
       - name: Install provisioning profile
         run: |
