@@ -102,8 +102,11 @@ jobs:
 
       - name: Verify provisioning profile
         run: |
-          security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/iOS_Test.mobileprovision | grep -A 2 UUID
-          security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/iOS_Test.mobileprovision | grep Name
+          security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/iOS_Test.mobileprovision \
+          | grep -A 10 -E "(Name|UUID|ApplicationIdentifier|TeamIdentifier|ProvisionedDevices|Entitlements)"
+
+          # security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/iOS_Test.mobileprovision | grep -A 2 UUID
+          # security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/iOS_Test.mobileprovision | grep Name
 
       - name: Show installed code signing identities
         run: security find-identity -p codesigning -v
@@ -133,6 +136,10 @@ jobs:
           -configuration Release \
           -archivePath output/App.xcarchive \
           -destination generic/platform=iOS \
+          CODE_SIGN_STYLE=Manual \
+          DEVELOPMENT_TEAM=J6MWBCBLW7 \
+          PROVISIONING_PROFILE_SPECIFIER="iOS_Test" \
+          CODE_SIGN_IDENTITY="Apple Distribution"
 
       - name: Export IPA
         run: |
