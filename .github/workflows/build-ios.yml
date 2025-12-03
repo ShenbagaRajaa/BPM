@@ -24,9 +24,7 @@ jobs:
         run: |
           npm run build
           npx cap sync ios
-      - name: Force manual signing for Pods
-        run: |
-          find ios/App/Pods -name '*.xcconfig' -exec sed -i '' 's/CODE_SIGN_STYLE = Automatic/CODE_SIGN_STYLE = Manual/g' {} \;
+
       # ---------------------------
       # Certificates & provisioning
       # ---------------------------
@@ -120,14 +118,6 @@ jobs:
       # ---------------------------
       # Build IPA
       # ---------------------------
-      - name: Apply xcconfig to Xcode project
-        run: |
-          sed -i '' 's/PRODUCT_NAME = App;/PRODUCT_NAME = App;\n#include "App.xcconfig"/' ios/App/App.xcodeproj/project.pbxproj
-      
-      - name: Force manual signing for Pods
-        run: |
-          find ios/App/Pods -name '*.xcconfig' -exec sed -i '' 's/CODE_SIGN_STYLE = Automatic/CODE_SIGN_STYLE = Manual/g' {} \;
-
       - name: Build IPA with Xcode
         run: |
           xcodebuild archive \
@@ -136,10 +126,7 @@ jobs:
           -configuration Release \
           -archivePath output/App.xcarchive \
           -destination generic/platform=iOS \
-          CODE_SIGN_STYLE=Manual \
-          DEVELOPMENT_TEAM=J6MWBCBLW7 \
-          PROVISIONING_PROFILE_SPECIFIER="iOS_Test" \
-          CODE_SIGN_IDENTITY="Apple Distribution"
+          -xcconfig ios/App/App/AppSigning.xcconfig
 
       - name: Export IPA
         run: |
@@ -147,7 +134,6 @@ jobs:
             -archivePath output/App.xcarchive \
             -exportOptionsPlist ios/App/exportOptions.plist \
             -exportPath output
-
 
       - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4
