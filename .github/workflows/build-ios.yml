@@ -214,3 +214,15 @@ jobs:
         run: |
           echo "📦 Build outputs:"
           ls -lah output/ || echo "No output directory"
+
+          echo ""
+          echo "🔍 Checking entitlements embedded in app..."
+          codesign -d --entitlements :- Payload/*.app
+    
+          echo ""
+          echo "📋 Checking Bundle ID in Info.plist..."
+          /usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" Payload/*.app/Info.plist
+    
+          echo ""
+          echo "📋 Checking if app has Associated Domains..."
+          codesign -d --entitlements :- Payload/*.app | grep -A 5 "associated-domains" || echo "❌ No Associated Domains found in app"
