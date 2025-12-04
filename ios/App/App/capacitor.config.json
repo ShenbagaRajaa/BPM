@@ -1,0 +1,25 @@
+{
+	"appId": "com.bpmgr.app",
+	"appName": "BPM",
+	"webDir": "dist/acomdev",
+	"ios": {
+    	"scheme": "bpm"
+  	},
+	"server": {
+		"cleartext": true,
+		"androidScheme": "http"
+	},
+	"plugins": {
+		"PushNotifications": {
+			"presentationOptions": [
+				"badge",
+				"sound",
+				"alert"
+			]
+		}
+	},
+	"packageClassList": [
+		"AppPlugin",
+		"CAPBrowserPlugin"
+	]
+}
