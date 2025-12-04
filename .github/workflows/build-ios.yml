@@ -147,7 +147,7 @@ jobs:
             CODE_SIGN_IDENTITY="Apple Distribution" \
             DEVELOPMENT_TEAM=J6MWBCBLW7 \
             PROVISIONING_PROFILE_SPECIFIER="${PROFILE_UUID}" \
-            CURRENT_PROJECT_VERSION=1.0.0
+            CODE_SIGN_ENTITLEMENTS=app.entitlements
           
           echo "✅ Xcode project signing style set to Manual"
       # ---------------------------
@@ -170,6 +170,7 @@ jobs:
             DEVELOPMENT_TEAM=J6MWBCBLW7 \
             PROVISIONING_PROFILE_SPECIFIER="${PROFILE_UUID}" \
             CODE_SIGN_STYLE=Manual \
+            CODE_SIGN_ENTITLEMENTS=app.entitlements \
             CODE_SIGN_IDENTITY="Apple Distribution"
 
       - name: Create exportOptions.plist
